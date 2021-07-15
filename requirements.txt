@@ -1,0 +1,11 @@
+click==8.0.1
+confuse==1.5.0
+Flask==2.0.1
+greenlet==1.1.0
+itsdangerous==2.0.1
+Jinja2==3.0.1
+MarkupSafe==2.0.1
+psycopg2-binary==2.9.1
+PyYAML==5.4.1
+SQLAlchemy==1.4.21
+Werkzeug==2.0.1

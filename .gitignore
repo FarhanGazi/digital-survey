@@ -1,6 +1,6 @@
 venv/
 
-config.yml
+config.yaml
 
 *.pyc
 **/__pycache__/

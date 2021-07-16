@@ -11,13 +11,15 @@ else:
 
 class Config():
   database = config['database']
-
   driver = database['driver'].get()
   username = database['username'].get()
   password = database['password'].get()
   host = database['host'].get()
   port = database['port'].get()
   databasename = database['databasename'].get()
+
+  application = config['application']
+  secret_key = application['secretkey'].get()
 
   @staticmethod
   def database_url():

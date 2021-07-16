@@ -1,7 +1,8 @@
 from configs.sqladb import *
 from sqlalchemy.orm import validates
+from flask_login import UserMixin
 
-class User(Base):
+class User(Base, UserMixin):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
@@ -17,4 +18,4 @@ class User(Base):
         return address
 
     def __repr__(self):
-        return "<User(enail='%s', role='%s')>" % (self.enail, self.role)
+        return "<User(enail='%s', role='%s')>" % (self.email, self.role)

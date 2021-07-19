@@ -2,7 +2,7 @@ from flask import Flask
 from flask_login import current_user, login_user, logout_user, login_required
 
 from configs.config import Config
-from configs.sqladb import Base, engine, session
+from configs.sqladb import DB
 from ds.helpers.auth import login_manager, requires_roles
 from ds.models.user import *
 
@@ -10,7 +10,7 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config['SECRET_KEY'] = Config.secret_key
 
-    Base.metadata.create_all(engine)
+    DB.Base.metadata.create_all(DB.engine)
     login_manager.init_app(app)
 
     # new_user = User(name='Gino', surname='Buonvino', email='gino@buonvino.com', password='123', role='Admin')

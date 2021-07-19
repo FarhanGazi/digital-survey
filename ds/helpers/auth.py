@@ -1,14 +1,14 @@
 from functools import wraps
 from flask_login import LoginManager, current_user
 
-from configs.sqladb import session
+from configs.sqladb import DB
 from ds.models.user import User
 
 login_manager = LoginManager()
 
 @login_manager.user_loader
 def load_user(user_id):
-  user = session.query(User).filter(User.id==user_id).first()
+  user = DB.session.query(User).filter(User.id==user_id).first()
   return user
 
 def requires_roles(*roles):

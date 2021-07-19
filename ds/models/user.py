@@ -2,7 +2,7 @@ from configs.sqladb import *
 from sqlalchemy.orm import validates
 from flask_login import UserMixin
 
-class User(Base, UserMixin):
+class User(DB.Base, UserMixin):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)

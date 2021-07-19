@@ -1,4 +1,3 @@
-from os import environ
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from configs.config import Config

@@ -1,8 +1,10 @@
-from configs.sqladb import *
+from sqlalchemy import Column, String, Integer, false, CheckConstraint
 from sqlalchemy.orm import validates
 from flask_login import UserMixin
 
-class User(DB.Base, UserMixin):
+from ds.helpers.base import Base
+
+class User(Base, UserMixin):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
@@ -10,7 +12,7 @@ class User(DB.Base, UserMixin):
     surname = Column(String)
     email = Column(String, nullable=false)
     password = Column(String, nullable=false)
-    role = Column(String, nullable=false)
+    role = Column(String, CheckConstraint("role IN ('admin', 'panelist')"), nullable=false)
 
     @validates('email')
     def validate_email(self, key, address):

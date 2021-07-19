@@ -6,10 +6,13 @@ from ds.models.user import User
 
 login_manager = LoginManager()
 
+
 @login_manager.user_loader
 def load_user(user_id):
-  user = DB.session.query(User).filter(User.id==user_id).first()
-  return user
+    db = DB('ds')
+    user = db.session.query(User).filter(User.id == user_id).first()
+    return user
+
 
 def requires_roles(*roles):
     def wrapper(f):

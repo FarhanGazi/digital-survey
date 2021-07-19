@@ -9,6 +9,11 @@ from ds.helpers.auth import login_manager, requires_roles
 from ds.helpers.base import Base
 from ds.models.user import User
 from ds.models.survey import Survey
+from ds.models.question import Question
+from ds.models.filling import Filling
+from ds.models.answer import Answer
+from ds.models.response import Response
+
 
 def create_app():
     # Create Flask App

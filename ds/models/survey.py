@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, event, DDL, false
+from sqlalchemy import Column, String, Integer, ForeignKey, event, DDL
 from sqlalchemy.orm import relationship
 
 from ds.helpers.base import Base
@@ -8,10 +8,10 @@ class Survey(Base):
     __tablename__ = 'surveys'
 
     id = Column(Integer, primary_key=True)
-    title = Column(String, nullable=false)
+    title = Column(String, nullable=False)
     description = Column(String)
-    status = Column(String, nullable=false, default='draft')
-    user_id = Column(Integer, ForeignKey(User.id), nullable=false)
+    status = Column(String, nullable=False, default='draft')
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
 
     user = relationship(User, back_populates="surveys")
 

@@ -9,7 +9,8 @@ class DB:
 
             if self.username == 'ds':
               print('XXXXXXXXXXXXX CONNESSIONE CON DB XXXXXXXXXXXXXXXXX')
-              self.engine = create_engine(Config.database_url(), echo=True)
+              config = Config(self.username)
+              self.engine = create_engine(config.database_url, echo=True)
               self.Session = sessionmaker(bind=self.engine)
               self.session = self.Session()
 

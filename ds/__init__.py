@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, config
 from flask_login import current_user, login_user, logout_user, login_required
 from sqlalchemy.sql.expression import true
 
@@ -24,7 +24,8 @@ def create_app():
     Base.metadata.create_all(db.engine, checkfirst=true)
 
     # Create login manager
-    app.config['SECRET_KEY'] = Config.secret_key
+    config = Config('ds')
+    app.config['SECRET_KEY'] = config.secret_key
     login_manager.init_app(app)
 
     # new_user = User(name='Gino', surname='Buonvino', email='gino@buonvino.com', password='123', role='admin')

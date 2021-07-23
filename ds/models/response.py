@@ -1,5 +1,6 @@
-from re import U
-from sqlalchemy import Column, String, Integer, ForeignKey, CheckConstraint
+import datetime
+
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
 
 from ds.helpers.base import Base
@@ -18,6 +19,10 @@ class Response(Base):
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
     question_id = Column(Integer, ForeignKey(Question.id), nullable=False)
     answer_id = Column(Integer, ForeignKey(Answer.id))
+
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now)
+    updated_at = Column('updated_at', DateTime,
+                        default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
     user = relationship(User, back_populates="responses")
     question = relationship(Question, back_populates="responses")

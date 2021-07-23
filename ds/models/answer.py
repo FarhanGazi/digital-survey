@@ -1,6 +1,7 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, CheckConstraint
+import datetime
+
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.traversals import ANON_NAME
 
 from ds.helpers.base import Base
 from ds.models.question import Question
@@ -11,12 +12,19 @@ class Answer(Base):
 
     id = Column(Integer, primary_key=True)
     answer = Column(String, nullable=False)
-    status = Column(String, nullable=False, default='active')
+    status = Column(String, CheckConstraint(
+        "status IN ('draft', 'active', 'inactive')"), nullable=False, default='draft')
     question_id = Column(Integer, ForeignKey(Question.id), nullable=False)
+
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now)
+    updated_at = Column('updated_at', DateTime,
+                        default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
     question = relationship(Question, back_populates="answers")
 
     def __repr__(self):
         return "<Survey(answer='%s', status='%s')>" % (self.answer, self.status)
 
-Question.answers = relationship(Answer, order_by=Answer.id, back_populates="question")
+
+Question.answers = relationship(
+    Answer, order_by=Answer.id, back_populates="question")

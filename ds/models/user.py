@@ -1,8 +1,11 @@
-from sqlalchemy import Column, String, Integer, CheckConstraint
+import datetime
+
+from sqlalchemy import Column, String, Integer, DateTime, CheckConstraint
 from sqlalchemy.orm import validates
 from flask_login import UserMixin
 
 from ds.helpers.base import Base
+
 
 class User(Base, UserMixin):
     __tablename__ = 'users'
@@ -12,7 +15,12 @@ class User(Base, UserMixin):
     surname = Column(String)
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
-    role = Column(String, CheckConstraint("role IN ('admin', 'panelist')"), nullable=False)
+    role = Column(String, CheckConstraint(
+        "role IN ('admin', 'panelist')"), nullable=False)
+
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now)
+    updated_at = Column('updated_at', DateTime,
+                        default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
     @validates('email')
     def validate_email(self, key, address):

@@ -1,4 +1,6 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, CheckConstraint
+import datetime
+
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, CheckConstraint, select
 from sqlalchemy.orm import relationship
 
 from ds.helpers.base import Base
@@ -11,10 +13,16 @@ class Question(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     description = Column(String)
-    status = Column(String, nullable=False, default='draft')
-    type = Column(String, CheckConstraint("type IN ('radio', 'multiple', 'text')"), nullable=False)
-    seq = Column(Integer, nullable=False)
+    status = Column(String, CheckConstraint(
+        "status IN ('draft', 'active', 'inactive')"), nullable=False, default='draft')
+    type = Column(String, CheckConstraint(
+        "type IN ('radio', 'multiple', 'text')"), nullable=False)
     survey_id = Column(Integer, ForeignKey(Survey.id), nullable=False)
+    seq = Column(Integer, nullable=False, default=1)
+
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now)
+    updated_at = Column('updated_at', DateTime,
+                        default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
     survey = relationship(Survey, back_populates="questions")
 
@@ -22,4 +30,5 @@ class Question(Base):
         return "<Survey(title='%s', status='%s')>" % (self.title, self.status)
 
 
-Survey.questions = relationship(Question, order_by=Question.seq, back_populates="survey")
+Survey.questions = relationship(
+    Question, order_by=Question.seq, back_populates="survey")

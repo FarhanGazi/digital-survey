@@ -13,9 +13,8 @@ class Response(Base):
     __tablename__ = 'responses'
 
     id = Column(Integer, primary_key=True)
-    response = Column(String)
-    type = Column(String, CheckConstraint(
-        "type IN ('radio', 'multiple', 'text')"), nullable=False)
+    type = Column(String, CheckConstraint("type IN ('radio', 'multiple', 'text')"), nullable=False)
+    response = Column(String, CheckConstraint("(type <> 'text') OR (response IS NOT NULL)"))
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
     question_id = Column(Integer, ForeignKey(Question.id), nullable=False)
     answer_id = Column(Integer, ForeignKey(Answer.id))

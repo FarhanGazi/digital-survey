@@ -2,7 +2,10 @@ import datetime
 
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
+from sqlalchemy import event
+from sqlalchemy.orm.exc import FlushError
 
+from configs.sqladb import DB
 from ds.helpers.base import Base
 from ds.models.question import Question
 
@@ -26,3 +29,16 @@ class Answer(Base):
 
     def __repr__(self):
         return "<Survey(answer='%s', status='%s')>" % (self.answer, self.status)
+
+
+##########################################
+# SQL-ALCHEMY TRIGGERS ALTERNATIVE
+##########################################
+
+@event.listens_for(Answer, 'before_insert')
+@event.listens_for(Answer, 'before_update')
+def check_users_role(mapper, connection, target):
+    db = DB('ds')
+    question = db.session.query(Question).filter(Question.id == target.question_id).first()
+    if question.type not in ['radio', 'multiple']:
+        raise FlushError

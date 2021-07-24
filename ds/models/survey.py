@@ -38,8 +38,8 @@ class Survey(Base):
 
 @event.listens_for(Survey, 'before_insert')
 @event.listens_for(Survey, 'before_update')
-def my_before_insert_listener(mapper, connection, target):
+def check_users_role(mapper, connection, target):
     db = DB('ds')
     user = db.session.query(User).filter(User.id == target.user_id).first()
-    if user.role != 'admin':
+    if user.role not in ['admin']:
         raise FlushError

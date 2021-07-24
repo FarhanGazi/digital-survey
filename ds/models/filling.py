@@ -2,7 +2,10 @@ import datetime
 
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
+from sqlalchemy import event
+from sqlalchemy.orm.exc import FlushError
 
+from configs.sqladb import DB
 from ds.helpers.base import Base
 from ds.models.user import User
 from ds.models.survey import Survey
@@ -30,3 +33,16 @@ class Filling(Base):
 
     def __repr__(self):
         return "<Survey(id='%s', status='%s')>" % (self.id, self.status)
+
+
+##########################################
+# SQL-ALCHEMY TRIGGERS ALTERNATIVE
+##########################################
+
+@event.listens_for(Filling, 'before_insert')
+@event.listens_for(Filling, 'before_update')
+def check_users_role(mapper, connection, target):
+    db = DB('ds')
+    user = db.session.query(User).filter(User.id == target.user_id).first()
+    if user.role not in ['panelist']:
+        raise FlushError

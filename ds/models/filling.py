@@ -30,11 +30,3 @@ class Filling(Base):
 
     def __repr__(self):
         return "<Survey(id='%s', status='%s')>" % (self.id, self.status)
-
-
-User.fillings = relationship(
-    Filling, order_by=Filling.id, back_populates="user")
-Survey.fillings = relationship(
-    Filling, order_by=Filling.id, back_populates="survey")
-Question.fillings = relationship(
-    Filling, order_by=Filling.id, back_populates="question")

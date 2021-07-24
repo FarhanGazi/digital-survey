@@ -25,10 +25,9 @@ class Question(Base):
                         default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
     survey = relationship(Survey, back_populates="questions")
+    answers = relationship("Answer", back_populates="question", cascade="all, delete, delete-orphan")
+    responses = relationship("Response", back_populates="question", cascade="all, delete, delete-orphan")
+    fillings = relationship("Filling", back_populates="question", cascade="all, delete, delete-orphan")
 
     def __repr__(self):
         return "<Survey(title='%s', status='%s')>" % (self.title, self.status)
-
-
-Survey.questions = relationship(
-    Question, order_by=Question.seq, back_populates="survey")

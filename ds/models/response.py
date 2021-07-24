@@ -30,11 +30,3 @@ class Response(Base):
 
     def __repr__(self):
         return "<Survey(response='%s', type='%s')>" % (self.response, self.type)
-
-
-User.responses = relationship(
-    Response, order_by=Response.id, back_populates="user")
-Question.responses = relationship(
-    Response, order_by=Response.id, back_populates="question")
-Answer.responses = relationship(
-    Response, order_by=Response.id, back_populates="answer")

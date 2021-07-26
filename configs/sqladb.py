@@ -1,7 +1,30 @@
-from sqlalchemy import *
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
 from configs.config import Config
+from sqlalchemy.orm import sessionmaker
 
-engine = create_engine(Config.database_url(), echo=True)
+class DB:
+    class __DB:
+        def __init__(self, arg):
+            self.username = arg
 
-Base = declarative_base()
+            if self.username == 'ds':
+              print('XXXXXXXXXXXXX CONNESSIONE CON DB XXXXXXXXXXXXXXXXX')
+              config = Config(self.username)
+              self.engine = create_engine(config.database_url, echo=True)
+              self.Session = sessionmaker(bind=self.engine)
+              self.session = self.Session()
+
+        def __str__(self):
+            return repr(self) + self.username
+
+    instance = None
+
+    def __init__(self, arg):
+        if not DB.instance:
+            DB.instance = DB.__DB(arg)
+        else:
+          if DB.instance.username != arg:
+            DB.instance = DB.__DB(arg)
+
+    def __getattr__(self, name):
+        return getattr(self.instance, name)

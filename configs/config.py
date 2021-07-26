@@ -1,24 +1,42 @@
 import confuse
 from os import path
 
-config = confuse.Configuration('Digital-Survey', __name__)
 
-if path.isfile('config.yaml'):
-  config.set_file('config.yaml', base_for_paths=True)
-else:
-  config.set_file('default_config.yaml')
+class Config:
+    class __Config:
+        def __init__(self, arg):
+            config = confuse.Configuration('Digital-Survey', __name__)
+            if path.isfile('config.yaml'):
+                config.set_file('config.yaml', base_for_paths=True)
+            else:
+                config.set_file('default_config.yaml')
 
+            self.username = arg
+            if self.username in ['ds', 'admin', 'panelist']:
+                config = config[self.username]
+                database = config['database']
+                application = config['application']
 
-class Config():
-  database = config['database']
+                self.driver = database['driver'].get()
+                self.username = database['username'].get()
+                self.password = database['password'].get()
+                self.host = database['host'].get()
+                self.port = database['port'].get()
+                self.databasename = database['databasename'].get()
+                self.secret_key = application['secretkey'].get()
+                self.database_url = f'{self.driver}://{self.username}:{self.password}@{self.host}:{self.port}/{self.databasename}'
 
-  driver = database['driver'].get()
-  username = database['username'].get()
-  password = database['password'].get()
-  host = database['host'].get()
-  port = database['port'].get()
-  databasename = database['databasename'].get()
+        def __str__(self):
+            return repr(self) + self.username
 
-  @staticmethod
-  def database_url():
-    return f'{Config.driver}://{Config.username}:{Config.password}@{Config.host}:{Config.port}/{Config.databasename}'
+    instance = None
+
+    def __init__(self, arg):
+        if not Config.instance:
+            Config.instance = Config.__Config(arg)
+        else:
+            if Config.instance.username != arg:
+                Config.instance = Config.__Config(arg)
+
+    def __getattr__(self, name):
+        return getattr(self.instance, name)

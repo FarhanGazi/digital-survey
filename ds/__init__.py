@@ -14,6 +14,8 @@ from ds.models.filling import Filling
 from ds.models.answer import Answer
 from ds.models.response import Response
 
+import ds.blueprints.auth as authentication
+
 
 def create_app():
     # Create Flask App
@@ -27,6 +29,8 @@ def create_app():
     config = Config('ds')
     app.config['SECRET_KEY'] = config.secret_key
     login_manager.init_app(app)
+
+    app.register_blueprint(authentication.bp)
 
     # new_user = User(name='Gino', surname='Buonvino', email='gino@buonvino.com', password='123', role='admin')
     # db.session.add(new_user)
@@ -56,12 +60,6 @@ def create_app():
         db.session.delete(user)
         db.session.commit()
         return surveys[0].title
-
-    @app.route('/login', methods=['GET', 'POST'])
-    def login():
-        user = db.session.query(User).filter(User.id == 1).first()
-        login_user(user)
-        return 'LOGGATO!'
 
     @app.route('/logout')
     @login_required

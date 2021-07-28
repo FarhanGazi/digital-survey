@@ -32,13 +32,13 @@ def create_app():
 
     app.register_blueprint(authentication.bp)
 
-    new_user = User(name='Gino', surname='Buonvino', email='gino@buonvino.com', password='123', role='admin')
-    db.session.add(new_user)
-    db.session.commit()
-    user = db.session.query(User).filter(User.id==1).first()
+    # new_user = User(name='Gino', surname='Buonvino', email='gino@buonvino.com', password='123', role='admin')
+    # db.session.add(new_user)
+    # db.session.commit()
+    # user = db.session.query(User).filter(User.id==1).first()
 
-    print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-    print(user)
+    # print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+    # print(user)
 
     # @app.route('/create', methods=['GET', 'POST'])
     # def create():

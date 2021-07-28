@@ -1,4 +1,5 @@
 from functools import wraps
+from flask import g
 from flask_login import LoginManager, current_user
 
 from configs.sqladb import DB
@@ -11,6 +12,7 @@ login_manager = LoginManager()
 def load_user(user_id):
     db = DB('ds')
     user = db.session.query(User).filter(User.id == user_id).first()
+    g.user = user
     return user
 
 

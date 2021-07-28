@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+  <title>{% block title %}{% endblock %} - Digital Survey</title>
+</head>
+
+<body>
+  <nav>
+    <h1><a href="#">Digital Survey</a></h1>
+    <ul>
+      {% if g.user %}
+      <li><span>{{ g.user['username'] }}</span>
+      <li><a href="#">Log Out</a>
+        {% else %}
+      <li><a href="#">Register</a>
+      <li><a href="#">Log In</a>
+        {% endif %}
+    </ul>
+  </nav>
+  <section class="content">
+    <header>
+      {% block header %}{% endblock %}
+    </header>
+    {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {% block content %}
+    {% endblock %}
+  </section>
+  <script type="text/javascript" href="{{ url_for('static', filename='javascript/bootstrap.bundle.min.js') }}"></script>
+  <script type="text/javascript" href="{{ url_for('static', filename='javascript/popper.min.js') }}"></script>
+  <script type="text/javascript" href="{{ url_for('static', filename='javascript/bootstrap.min.js') }}"></script>
+</body>
+
+</html>

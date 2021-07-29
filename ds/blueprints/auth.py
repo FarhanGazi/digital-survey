@@ -9,7 +9,6 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 @bp.route('/signin', methods=['GET', 'POST'])
 def signin():
     if request.method == "POST":
-        #return render_template("auth/signin.html")
         print(request.form)
         email = request.form["email"]
         password = request.form["password"]
@@ -18,7 +17,7 @@ def signin():
             User.email == email, User.password == password).first()
         if user:
             login_user(user)
-            return redirect(url_for("admin"))
+            return redirect(url_for("survey.list"))
         else:
             return redirect(url_for("auth.signin"))
     else:

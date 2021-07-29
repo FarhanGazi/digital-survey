@@ -15,6 +15,7 @@ from ds.models.answer import Answer
 from ds.models.response import Response
 
 import ds.blueprints.auth as authentication
+import ds.blueprints.survey as survey
 
 
 def create_app():
@@ -31,6 +32,7 @@ def create_app():
     login_manager.init_app(app)
 
     app.register_blueprint(authentication.bp)
+    app.register_blueprint(survey.bp)
 
     # new_user = User(name='Gino', surname='Buonvino', email='gino@buonvino.com', password='123', role='admin')
     # db.session.add(new_user)

@@ -9,7 +9,6 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 @bp.route('/signin', methods=['GET', 'POST'])
 def signin():
     if request.method == "POST":
-        print(request.form)
         email = request.form["email"]
         password = request.form["password"]
         db = DB('ds')

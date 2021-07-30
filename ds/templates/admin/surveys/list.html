@@ -3,7 +3,7 @@
 {% block header %} Surveys {% endblock %}
 {% block content %}
 <div class="d-flex flex-row-reverse">
-  <button type="button" class="btn btn-success">New survey</button>
+  <a type="button" class="btn btn-success" href="{{ url_for('survey.create') }}">New survey</a>
 </div>
 <table class="table table-hover">
   <thead>

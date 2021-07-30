@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %} New survey {% endblock %}
+{% block header %} New survey {% endblock %}
+{% block content %}
+<form method="post">
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input class="form-control" id="title" name="title" required>
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea class="form-control" id="description" name="description" rows="6"
+      style="max-height: 150px; min-height: 150px;"></textarea>
+  </div>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a class="btn btn-outline-secondary" href="{{ url_for('survey.list') }}">Cancel</a>
+    <button type="submit" class="btn btn-success">Create</button>
+  </div>
+</form>
+{% endblock %}

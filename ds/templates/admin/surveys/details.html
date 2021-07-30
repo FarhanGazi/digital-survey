@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %} {{ survey['title'] }} {% endblock %}
+{% block header %} {{ survey['id'] }} {% endblock %}
+{% block content %}
+<table *ngIf="!loading && question" class="table shadow mt-3 shadow-sm" cellspacing="10">
+  <thead class="thead-dark ">
+    <th class="text-center" colspan="2">Domanda<i></i></th>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Titolo</td>
+      <td class="text-left"></td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Tipo</td>
+      <td class="text-left"></td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Status</td>
+      <td><span [ngClass]="getQuestionStatusClass()"></span></td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Creata da</td>
+      <td *ngIf="question.get('creator')" class="text-left"></td>
+      <td *ngIf="!question.get('creator')" class="text-left"></td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Categoria</td>
+      <td class="text-left"><a
+          [routerLink]="['/admin', 'categories', question.get('category_id')]"></a>
+      </td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Obbligatoria</td>
+      <td class="text-left"><i *ngIf="question.is_mandatory()" class="fas fa-check fa-fw text-success"></i></td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Data Creazione</td>
+      <td class="text-left"></td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Data Ultima Modifica</td>
+      <td class="text-left"></td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Testo</td>
+      <td class="text-left" [innerHTML]="question.get('question_text') | removeHtml"></td>
+    </tr>
+
+  </tbody>
+</table>
+{% endblock %}

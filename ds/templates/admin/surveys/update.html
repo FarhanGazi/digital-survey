@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %} Modifica questionario {% endblock %}
+{% block header %} Modifica questionario {% endblock %}
+{% block content %}
+<form method="post">
+  <div class="mb-3">
+    <label for="title" class="form-label">Titolo</label>
+    <input class="form-control" id="title" name="title" value="{{survey['title']}}" required>
+  </div>
+  <div class="mb-3">
+    <label for="status" class="form-label">Stato</label>
+    <select class="form-select" id="status" name="status">
+      <option value="draft" {% if survey['status']=='draft' %} selected {% endif %}>Bozza</option>
+      <option value="active" {% if survey['status']=='active' %} selected {% endif %}>Attivo</option>
+      <option value="inactive" {% if survey['status']=='inactive' %} selected {% endif %}>Inattivo</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Descrizione</label>
+    <textarea class="form-control" id="description" name="description" rows="6"
+      style="max-height: 150px; min-height: 150px;">{{ survey['description'] }}</textarea>
+  </div>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a class="btn btn-outline-secondary" href="{{ url_for('survey.details', id=survey['id']) }}">Annulla</a>
+    <a href="{{ url_for('survey.delete', id=survey['id']) }}"
+      onclick="return confirm('Conferma per Eliminare definitivamente!')" type="button"
+      class="btn btn-danger">Elimina</a>
+    <button type="submit" class="btn btn-warning">Modifica</button>
+  </div>
+</form>
+{% endblock %}

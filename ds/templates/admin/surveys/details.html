@@ -1,52 +1,43 @@
 {% extends 'base.html' %}
 {% block title %} {{ survey['title'] }} {% endblock %}
-{% block header %} {{ survey['id'] }} {% endblock %}
+{% block header %} Questionario #{{ survey['id'] }} {% endblock %}
 {% block content %}
-<table *ngIf="!loading && question" class="table shadow mt-3 shadow-sm" cellspacing="10">
+<div class="d-md-flex">
+  <a href="{{ url_for('survey.list') }}" type="button" class="btn btn-outline-secondary">Indietro</a>
+  <a type="button" class="btn btn-success {% if survey['status'] == 'draft' %} disabled {% endif %}"
+    style="margin-left: auto; {% if survey['status'] == 'draft' %} cursor: not-allowed !important; pointer-events: auto; {% endif %}">Esporta
+    dati</a>
+  <a href="{{ url_for('survey.update', id=survey['id']) }}" type="button" class="btn btn-warning" style="margin-left: auto;">Modifica</a>
+</div>
+<table class="table shadow mt-3 shadow-sm" cellspacing="10">
   <thead class="thead-dark ">
-    <th class="text-center" colspan="2">Domanda<i></i></th>
+    <th class="text-center" colspan="2">Dettagli del questionario</th>
   </thead>
   <tbody>
     <tr>
       <td class="w-25 bg-secondary text-white border-right text-right">Titolo</td>
-      <td class="text-left"></td>
+      <td class="text-left">{{ survey['title'] }}</td>
     </tr>
     <tr>
-      <td class="w-25 bg-secondary text-white border-right text-right">Tipo</td>
-      <td class="text-left"></td>
+      <td class="w-25 bg-secondary text-white border-right text-right">Descrizione</td>
+      <td class="text-left">{{ survey['description'] }}</td>
     </tr>
     <tr>
-      <td class="w-25 bg-secondary text-white border-right text-right">Status</td>
-      <td><span [ngClass]="getQuestionStatusClass()"></span></td>
+      <td class="w-25 bg-secondary text-white border-right text-right">Stato</td>
+      <td>{{ survey['status'] }}</td>
     </tr>
     <tr>
       <td class="w-25 bg-secondary text-white border-right text-right">Creata da</td>
-      <td *ngIf="question.get('creator')" class="text-left"></td>
-      <td *ngIf="!question.get('creator')" class="text-left"></td>
+      <td class="text-left">{{ survey['user']['name'] }} {{ survey['user']['surname'] }}</td>
     </tr>
     <tr>
-      <td class="w-25 bg-secondary text-white border-right text-right">Categoria</td>
-      <td class="text-left"><a
-          [routerLink]="['/admin', 'categories', question.get('category_id')]"></a>
-      </td>
+      <td class="w-25 bg-secondary text-white border-right text-right">Creato il</td>
+      <td class="text-left">{{ survey['created_at'].strftime("%c") }}</td>
     </tr>
     <tr>
-      <td class="w-25 bg-secondary text-white border-right text-right">Obbligatoria</td>
-      <td class="text-left"><i *ngIf="question.is_mandatory()" class="fas fa-check fa-fw text-success"></i></td>
+      <td class="w-25 bg-secondary text-white border-right text-right">Aggiornato il</td>
+      <td class="text-left">{{ survey['updated_at'].strftime("%c") }}</td>
     </tr>
-    <tr>
-      <td class="w-25 bg-secondary text-white border-right text-right">Data Creazione</td>
-      <td class="text-left"></td>
-    </tr>
-    <tr>
-      <td class="w-25 bg-secondary text-white border-right text-right">Data Ultima Modifica</td>
-      <td class="text-left"></td>
-    </tr>
-    <tr>
-      <td class="w-25 bg-secondary text-white border-right text-right">Testo</td>
-      <td class="text-left" [innerHTML]="question.get('question_text') | removeHtml"></td>
-    </tr>
-
   </tbody>
 </table>
 {% endblock %}

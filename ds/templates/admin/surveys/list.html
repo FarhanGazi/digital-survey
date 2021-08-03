@@ -2,11 +2,11 @@
 {% block title %} Questionari {% endblock %}
 {% block header %} Lista Questionari {% endblock %}
 {% block content %}
-<div class="d-flex flex-row-reverse">
-  <a type="button" class="btn btn-success" href="{{ url_for('survey.create') }}">Nuovo Questionario</a>
+<div class="d-flex">
+  <h6>{{surveys|length}} questionari trovati</h6>
+  <a type="button" class="btn btn-success" style="margin-left: auto;" href="{{ url_for('survey.create') }}">Nuovo
+    Questionario</a>
 </div>
-{% if surveys|length > 0 %}
-<h5>{{surveys|length}} questionari trovati</h5>
 <table class="table table-hover">
   <thead>
     <tr>
@@ -21,9 +21,13 @@
     {% for survey in surveys %}
     <tr>
       <th scope="row">{{ survey['id'] }}</th>
-      <td style="width: 30%;">{{ survey['title'] }}</td>
-      <td style="width: 50%;">{{ survey['description'] }}</td>
-      <td style="width: 20%;">{{ survey['status'] }}</td>
+      <td class="w-25">{{ survey['title'] }}</td>
+      <td class="w-25">{{ survey['description'] }}</td>
+      <td class="w-25">
+        {% if survey['status']=='draft' %} Bozza {% endif %}
+        {% if survey['status']=='active' %} Attivo {% endif %}
+        {% if survey['status']=='inactive' %} Inattivo {% endif %}
+      </td>
       <td style="width: 0;">
         <div class="btn-group" role="group">
           <a href="{{ url_for('survey.details', id=survey['id']) }}" type="button"
@@ -39,10 +43,4 @@
     {% endfor %}
   </tbody>
 </table>
-{% endif %}
-{% if surveys|length == 0 %}
-<div style="text-align: center;">
-  <h5>Nessun questionario trovato</h5>
-</div>
-{% endif %}
 {% endblock %}

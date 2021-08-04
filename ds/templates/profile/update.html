@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %} Modifica profilo {% endblock %}
+{% block header %} Modifica il tuo profilo {% endblock %}
+{% block content %}
+<form method="post">
+  <div class="mb-3">
+    <label for="name" class="form-label">Nome</label>
+    <input class="form-control" id="name" name="name" value="{{user['name']}}">
+  </div>
+  <div class="mb-3">
+    <label for="surname" class="form-label">Cognome</label>
+    <input class="form-control" id="surname" name="surname" value="{{user['surname']}}">
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input class="form-control" id="email" name="email" type="email" value="{{user['email']}}" required>
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Password</label>
+    <input class="form-control" id="password" name="password" type="password" value="{{user['password']}}" required>
+  </div>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a class="btn btn-outline-secondary" href="{{ url_for('auth.index') }}">Annulla</a>
+    <button type="submit" class="btn btn-warning">Modifica</button>
+  </div>
+</form>
+{% endblock %}

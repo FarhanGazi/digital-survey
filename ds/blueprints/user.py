@@ -1,4 +1,3 @@
-from re import U
 from flask import Blueprint, request, render_template, redirect, url_for, flash
 from flask_login import current_user, login_required
 
@@ -14,7 +13,7 @@ bp = Blueprint("user", __name__, url_prefix="/users")
 @requires_roles('admin')
 def list():
     db = DB('ds')
-    users = db.session.query(User).order_by(User.id.asc()).all()
+    users = db.session.query(User).filter(User.id != current_user.id).order_by(User.id.asc()).all()
     return render_template("admin/users/list.html", users=users)
 
 

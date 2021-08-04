@@ -14,7 +14,7 @@ class User(Base, UserMixin):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     surname = Column(String)
-    email = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
     role = Column(String, CheckConstraint(
         "role IN ('admin', 'panelist')"), nullable=False)

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %} Sign up {% endblock %}
+{% block content %}
+<main class="form-signup">
+  <form method="post">
+    <div style="text-align: center;">
+      <img class="mb-4" src="{{ url_for('static', filename='images/water-drops.png') }}" alt="" width="72" height="57">
+    </div>
+    <h1 class="h3 mb-3 fw-normal" style="text-align: center;">Please sign up</h1>
+
+    <div class="mb-3">
+      <label for="name" class="form-label">Nome</label>
+      <input class="form-control" id="name" name="name" required>
+    </div>
+    <div class="mb-3">
+      <label for="surname" class="form-label">Cognome</label>
+      <input class="form-control" id="surname" name="surname" required>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input class="form-control" id="email" name="email" type="email" required>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input class="form-control" id="password" name="password" type="password" required>
+    </div>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
+  </form>
+</main>
+{% endblock %}

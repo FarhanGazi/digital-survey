@@ -1,5 +1,6 @@
+from re import U
+from flask import redirect, url_for, g
 from functools import wraps
-from flask import g
 from flask_login import LoginManager, current_user
 
 from configs.sqladb import DB
@@ -14,6 +15,11 @@ def load_user(user_id):
     user = db.session.query(User).filter(User.id == user_id).first()
     g.user = user
     return user
+
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return redirect(url_for("auth.signin"))
 
 
 def requires_roles(*roles):

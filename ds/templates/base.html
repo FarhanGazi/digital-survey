@@ -20,11 +20,14 @@
         <ul class="navbar-nav">
           {% if g.user and g.user["role"] == 'admin' %}
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ url_for('survey.list') }}">Surveys</a>
+            <a class="nav-link active" aria-current="page" href="{{ url_for('survey.list') }}">Questionari</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{ url_for('user.list') }}">Utenti</a>
           </li>
           {% elif g.user and g.user["role"] == 'panelist' %}
           <li class="nav-item">
-            <a class="nav-link" href="#">Panelist</a>
+            <a class="nav-link" href="#">Sondaggi</a>
           </li>
           {% endif %}
         </ul>
@@ -55,7 +58,7 @@
       {% block header %}{% endblock %}
     </h3>
     {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
+      <div class="p-3 mb-2 bg-danger text-white" style="border-radius: 5px; border: solid 1px brown;">{{ message }}</div>
     {% endfor %}
     {% block content %}
     {% endblock %}

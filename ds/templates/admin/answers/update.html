@@ -19,7 +19,10 @@
   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
     <a class="btn btn-outline-secondary"
       href="{{ url_for('question.details', survey_id=data['survey_id'], question_id=data['question_id']) }}">Annulla</a>
-    <button type="submit" class="btn btn-success">Modifica</button>
+    <a href="{{ url_for('answer.delete', survey_id=data['survey_id'], question_id=data['question_id'], answer_id=data['answer']['id']) }}"
+      onclick="return confirm('Conferma per Eliminare definitivamente!')" type="button"
+      class="btn btn-danger">Elimina</a>
+    <button type="submit" class="btn btn-warning">Modifica</button>
   </div>
 </form>
 {% endblock %}

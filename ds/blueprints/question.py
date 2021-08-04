@@ -100,4 +100,8 @@ def update(survey_id, question_id):
 @login_required
 @requires_roles('admin')
 def delete(survey_id, question_id):
-    return
+    db = DB('ds')
+    question = db.session.query(Question).filter(Question.id == question_id).first()
+    db.session.delete(question)
+    db.session.commit()
+    return redirect(url_for("survey.details", id=survey_id))

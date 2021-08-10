@@ -19,6 +19,7 @@ import ds.blueprints.question as question
 import ds.blueprints.answer as answer
 import ds.blueprints.user as user
 import ds.blueprints.profile as profile
+import ds.blueprints.filling as filling
 
 
 def create_app():
@@ -41,6 +42,7 @@ def create_app():
     app.register_blueprint(answer.bp)
     app.register_blueprint(user.bp)
     app.register_blueprint(profile.bp)
+    app.register_blueprint(filling.bp)
 
     app.add_url_rule("/", endpoint="auth.index")
 

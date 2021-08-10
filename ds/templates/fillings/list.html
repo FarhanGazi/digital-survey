@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %} Questionari {% endblock %}
+{% block header %} Lista Questionari {% endblock %}
+{% block content %}
+<div class="d-flex">
+  <h6>{{surveys|length}} questionari trovati</h6>
+</div>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Titolo</th>
+      <th scope="col">Descrizione</th>
+      <th scope="col">Azioni</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for survey in surveys %}
+    <tr>
+      <th scope="row">{{ survey['id'] }}</th>
+      <td class="w-25">{{ survey['title'] }}</td>
+      <td class="w-60">{{ survey['description'] }}</td>
+      <td class="w-15">
+        <div class="btn-group" role="group">
+          <a href="{{ url_for('filling.start', survey_id=survey['id']) }}" type="button"
+            class="btn btn-outline-success">Compila</a>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

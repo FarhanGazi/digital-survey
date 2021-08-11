@@ -1,12 +1,12 @@
 import datetime
 
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, CheckConstraint
+from sqlalchemy import Column, String, Integer, Boolean, DateTime, ForeignKey, CheckConstraint, Index
 from sqlalchemy.orm import relationship
 from sqlalchemy import event
 from sqlalchemy.orm.exc import FlushError
 
-from configs.sqladb import DB
 from ds.helpers.base import Base
+from configs.sqladb import DB
 from ds.models.user import User
 from ds.models.survey import Survey
 from ds.models.question import Question
@@ -16,6 +16,7 @@ class Filling(Base):
     __tablename__ = 'fillings'
 
     id = Column(Integer, primary_key=True)
+    is_last = Column(Boolean, default=False)
     status = Column(String, CheckConstraint(
         "status IN ('completed', 'incomplete')"), nullable=False, default='incomplete')
 
@@ -31,13 +32,24 @@ class Filling(Base):
     survey = relationship(Survey, back_populates="fillings")
     question = relationship(Question, back_populates="fillings")
 
+    responses = relationship(
+        "Response", back_populates="filling", cascade="all, delete, delete-orphan")
+
     def __repr__(self):
         return "<Survey(id='%s', status='%s')>" % (self.id, self.status)
 
+##########################################
+# SQL-ALCHEMY INDEX ALTERNATIVE
+##########################################
+
+
+Index('user_survey_filling', Filling.user_id,
+      Filling.survey_id, unique=True)
 
 ##########################################
 # SQL-ALCHEMY TRIGGERS ALTERNATIVE
 ##########################################
+
 
 @event.listens_for(Filling, 'before_insert')
 @event.listens_for(Filling, 'before_update')

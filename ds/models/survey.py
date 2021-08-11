@@ -25,6 +25,8 @@ class Survey(Base):
                         default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
     user = relationship(User, back_populates='surveys')
+    responses = relationship(
+        "Response", back_populates="survey", cascade="all, delete, delete-orphan")
     questions = relationship("Question", order_by="Question.seq",
                              back_populates="survey", cascade="all, delete, delete-orphan")
     fillings = relationship(

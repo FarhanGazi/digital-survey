@@ -75,3 +75,15 @@ def delete(id):
   db.session.delete(survey)
   db.session.commit()
   return redirect(url_for("survey.list"))
+
+###################################################################################
+# DATA EXPORT QUERY
+#
+# explain analyze select user_id,
+# json_agg(json_build_object('question_id', questions.id, 'question_order',
+# questions.seq, 'question_type', questions.type, 'options_number',
+# (select count(*) from questions q1 join answers a1 on q1.id=a1.question_id where q1.id=questions.id and a1.status='active'),
+# 'question', questions.title, 'answer', coalesce(answers.answer, responses.response))) from responses join questions on
+# responses.question_id = questions.id left outer join answers on responses.answer_id = answers.id where responses.survey_id = 1 group by responses.user_id
+#
+###################################################################################

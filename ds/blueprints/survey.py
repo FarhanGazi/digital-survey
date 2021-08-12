@@ -1,13 +1,11 @@
 import csv
 
-from flask.wrappers import Response
 from flask import Blueprint, request, render_template, redirect, url_for, send_file
 from flask_login import current_user, login_required
 from sqlalchemy import text
 
 from ds.helpers.auth import requires_roles
 from ds.models.filling import Filling
-from ds.models.answer import Answer
 from ds.models.survey import Survey
 from configs.sqladb import DB
 
@@ -93,9 +91,17 @@ def delete(id):
 @requires_roles('admin')
 def export(id):
     db = DB('ds')
+
+    ###############################################################
+    # Get Survey by ID in order to set export data filename
+    ###############################################################
     survey = db.session.query(Survey).filter(Survey.id == id).first()
     filename = f'{survey.title}.csv'.replace(' ', '')
-    data = db.session.execute(
+
+    ###############################################################
+    # Fetch all completed fillings data
+    ###############################################################
+    responses = db.session.execute(
         text("SELECT                                                                                        \
                     r.user_id AS user_id,                                                                   \
                     JSON_AGG(                                                                               \
@@ -120,25 +126,59 @@ def export(id):
             "survey_id": id
         }).fetchall()
 
+    ##################################################################
+    # Setting responses data in csv file
+    ##################################################################
+    header = []
+    data = []
+    header.append('user_id')
+    for x in responses:
+        data.append([x[0]])
 
+    for question in survey.questions:
+        header.append(f'question_{survey.questions.index(question) + 1}')
+        for x in data:
+            x.append(question.title)
+
+        if question.type == 'multiple':
+            for answer in question.answers:
+                header.append(f'answer_{question.answers.index(answer) + 1}')
+            for x in responses:
+                uid = x[0]
+                for d in data:
+                    if d[0] == uid:
+                        rs = x[1]
+                        m_res = [r for r in rs if r['question_id']
+                                 == question.id]
+                        opts_num = m_res[0]['options_number']
+                        for mr in m_res:
+                            d.append(mr['answer'])
+
+                        for _ in range(opts_num - len(m_res)):
+                            d.append(" ")
+        else:
+            header.append(f'answer_{survey.questions.index(question) + 1}')
+            for x in responses:
+                uid = x[0]
+                for d in data:
+                    if d[0] == uid:
+                        rs = x[1]
+                        response = [
+                            r for r in rs if r['question_id'] == question.id][0]
+                        d.append(response['answer'])
+
+    ##################################################################
+    # Creating csv file and writing header and data rows
+    ##################################################################
     with open(f'exports/{filename}', 'w', newline='\n', encoding='utf-8') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=';')
-        spamwriter.writerow(['Spam'] * 5 + ['Baked Beans'])
-        spamwriter.writerow(['Spam', 'Lovely Spam', 'Wonderful Spam'])
+        spamwriter.writerow(header)
+        spamwriter.writerows(data)
 
+    ##################################################################
+    # Send csv file as response attachment
+    ##################################################################
     return send_file(f'../exports/{filename}',
                      mimetype='text/csv',
                      attachment_filename=f'{filename}',
                      as_attachment=True)
-
-###################################################################################
-# DATA EXPORT QUERY
-#
-# explain analyze select user_id,
-# json_agg(json_build_object('question_id', questions.id, 'question_order',
-# questions.seq, 'question_type', questions.type, 'options_number',
-# (select count(*) from questions q1 join answers a1 on q1.id=a1.question_id where q1.id=questions.id and a1.status='active'),
-# 'question', questions.title, 'answer', coalesce(answers.answer, responses.response))) from responses join questions on
-# responses.question_id = questions.id left outer join answers on responses.answer_id = answers.id where responses.survey_id = 1 group by responses.user_id
-#
-###################################################################################

@@ -29,7 +29,11 @@ def details(id):
     survey = db.session.query(Survey).filter(Survey.id == id).first()
     completed_fillings = db.session.query(Filling.user_id).filter(
         Filling.survey_id == id, Filling.status == 'completed').group_by(Filling.user_id).count()
+    incomplete_fillings = db.session.query(Filling.user_id).filter(
+        Filling.survey_id == id, Filling.status == 'incomplete').group_by(Filling.user_id).count()
+
     survey.completed_fillings = completed_fillings
+    survey.incomplete_fillings = incomplete_fillings
 
     return render_template("admin/surveys/details.html", survey=survey)
 
@@ -86,7 +90,7 @@ def delete(id):
     return redirect(url_for("survey.list"))
 
 
-@bp.route('/<int:id>/export')
+@bp.route('/<int:id>/export', methods=['GET'])
 @login_required
 @requires_roles('admin')
 def export(id):

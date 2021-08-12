@@ -32,9 +32,10 @@
       </td>
     </tr>
     <tr>
-      <td class="w-25 bg-secondary text-white border-right text-right">Compilazioni completate</td>
+      <td class="w-25 bg-secondary text-white border-right text-right">Compilazioni</td>
       <td>
-        {{survey['completed_fillings']}}
+        <span class="text-success">{{survey['completed_fillings']}} (Completate)</span> /
+        <span class="text-danger">{{survey['incomplete_fillings']}} (Incomplete)</span>
       </td>
     </tr>
     <tr>

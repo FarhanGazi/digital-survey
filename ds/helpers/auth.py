@@ -1,4 +1,3 @@
-from re import U
 from flask import redirect, url_for, g
 from functools import wraps
 from flask_login import LoginManager, current_user

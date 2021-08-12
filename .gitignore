@@ -1,6 +1,6 @@
 venv/
 
-exports/**
+exports/**/*.csv
 
 config.yaml
 

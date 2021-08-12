@@ -1,10 +1,13 @@
 import csv
-from ds.models.filling import Filling
+
+from flask.wrappers import Response
 from flask import Blueprint, request, render_template, redirect, url_for, send_file
 from flask_login import current_user, login_required
+from sqlalchemy import text
 
 from ds.helpers.auth import requires_roles
-from ds.models.user import User
+from ds.models.filling import Filling
+from ds.models.answer import Answer
 from ds.models.survey import Survey
 from configs.sqladb import DB
 
@@ -92,6 +95,31 @@ def export(id):
     db = DB('ds')
     survey = db.session.query(Survey).filter(Survey.id == id).first()
     filename = f'{survey.title}.csv'.replace(' ', '')
+    data = db.session.execute(
+        text("SELECT                                                                                        \
+                    r.user_id AS user_id,                                                                   \
+                    JSON_AGG(                                                                               \
+                        JSON_BUILD_OBJECT(                                                                  \
+                            'question_id', q.id,                                                            \
+                            'question_order', q.seq,                                                        \
+                            'question_type', q.type,                                                        \
+                            'options_number',                                                               \
+                                (SELECT COUNT(*)                                                            \
+                                FROM questions q1 JOIN answers a1 on q1.id=a1.question_id                   \
+                                WHERE q1.id=q.id AND a1.status=:answer_status),                             \
+                            'question', q.title,                                                            \
+                            'answer', coalesce(a.answer, r.response)                                        \
+                        )                                                                                   \
+                    )                                                                                       \
+            FROM (responses r JOIN fillings f ON (r.filling_id = f.id AND f.status = :filling_status))      \
+                    JOIN questions q ON r.question_id=q.id LEFT OUTER JOIN answers a ON r.answer_id = a.id  \
+            WHERE r.survey_id = :survey_id GROUP BY r.user_id"),
+        {
+            "answer_status": 'active',
+            "filling_status": 'completed',
+            "survey_id": id
+        }).fetchall()
+
 
     with open(f'exports/{filename}', 'w', newline='\n', encoding='utf-8') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=';')

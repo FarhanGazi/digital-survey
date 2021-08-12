@@ -4,7 +4,8 @@
 {% block content %}
 <div class="d-md-flex">
   <a href="{{ url_for('survey.list') }}" type="button" class="btn btn-outline-secondary">Indietro</a>
-  <a type="button" class="btn btn-success {% if survey['status'] == 'draft' %} disabled {% endif %}"
+  <a href="{{ url_for('survey.export', id=survey['id']) }}" type="button"
+    class="btn btn-success {% if survey['status'] == 'draft' %} disabled {% endif %}"
     style="margin-left: auto; {% if survey['status'] == 'draft' %} cursor: not-allowed !important; pointer-events: auto; {% endif %}">Esporta
     dati</a>
   <a href="{{ url_for('survey.update', id=survey['id']) }}" type="button" class="btn btn-warning"

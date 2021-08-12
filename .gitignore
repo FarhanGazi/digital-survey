@@ -1,5 +1,7 @@
 venv/
 
+exports/**
+
 config.yaml
 
 *.pyc

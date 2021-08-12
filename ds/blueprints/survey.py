@@ -1,5 +1,6 @@
+import csv
 from ds.models.filling import Filling
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import Blueprint, request, render_template, redirect, url_for, send_file
 from flask_login import current_user, login_required
 
 from ds.helpers.auth import requires_roles
@@ -82,6 +83,25 @@ def delete(id):
     db.session.delete(survey)
     db.session.commit()
     return redirect(url_for("survey.list"))
+
+
+@bp.route('/<int:id>/export')
+@login_required
+@requires_roles('admin')
+def export(id):
+    db = DB('ds')
+    survey = db.session.query(Survey).filter(Survey.id == id).first()
+    filename = f'{survey.title}.csv'.replace(' ', '')
+
+    with open(f'exports/{filename}', 'w', newline='\n', encoding='utf-8') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=';')
+        spamwriter.writerow(['Spam'] * 5 + ['Baked Beans'])
+        spamwriter.writerow(['Spam', 'Lovely Spam', 'Wonderful Spam'])
+
+    return send_file(f'../exports/{filename}',
+                     mimetype='text/csv',
+                     attachment_filename=f'{filename}',
+                     as_attachment=True)
 
 ###################################################################################
 # DATA EXPORT QUERY

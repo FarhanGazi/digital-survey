@@ -31,3 +31,22 @@ def signin():
             return redirect(url_for("auth.signin"))
     else:
         return render_template("signin.html")
+
+
+@bp.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == "POST":
+        print(request.form)
+        email = request.form["email"]
+        password = request.form["password"]
+        db = DB('ds')
+        user = db.session.query(User).filter(
+            User.email == email, User.password == password).first()
+        if user:
+            login_user(user)
+            return redirect(url_for("admin"))
+        else:
+            return redirect(url_for("auth.signin"))
+    else:
+        return render_template("signup.html")
+

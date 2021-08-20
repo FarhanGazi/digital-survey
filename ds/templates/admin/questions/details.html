@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %} {{ data['question']['title'] }} {% endblock %}
+{% block header %} Domanda #{{ data['question']['id'] }} {% endblock %}
+{% block content %}
+<div class="d-md-flex">
+  <a href="{{ url_for('survey.details', id=data['survey_id']) }}" type="button"
+    class="btn btn-outline-secondary">Indietro</a>
+  <a href="{{ url_for('question.update', survey_id=data['survey_id'], question_id=data['question']['id']) }}"
+    type="button" class="btn btn-warning" style="margin-left: auto;">Modifica</a>
+</div>
+<table class="table shadow mt-3 shadow-sm" cellspacing="10">
+  <thead class="thead-dark ">
+    <th class="text-center" colspan="2">Dettagli della domanda</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Titolo</td>
+      <td class="text-left">{{ data['question']['title'] }}</td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Descrizione</td>
+      <td class="text-left">{{ data['question']['description'] }}</td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Stato</td>
+      <td class="text-left">
+        {% if data['question']['status']=='draft' %} Bozza {% endif %}
+        {% if data['question']['status']=='active' %} Attivo {% endif %}
+        {% if data['question']['status']=='inactive' %} Inattivo {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Tipo</td>
+      <td class="text-left">
+        {% if data['question']['type']=='radio' %} Radio {% endif %}
+        {% if data['question']['type']=='multiple' %} Multipla {% endif %}
+        {% if data['question']['type']=='text' %} Testo {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Ordine</td>
+      <td class="text-left">{{ data['question']['seq'] }}</td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Questionario</td>
+      <td class="text-left">{{ data['question']['survey']['title'] }}</td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Creato il</td>
+      <td class="text-left">{{ data['question']['created_at'].strftime("%c") }}</td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Aggiornato il</td>
+      <td class="text-left">{{ data['question']['updated_at'].strftime("%c") }}</td>
+    </tr>
+  </tbody>
+</table>
+
+{% if data['question']['type'] != 'text' %}
+<div class="answers-list" style="margin-top: 50px;">
+  <div class="d-flex">
+    <h6>{{data['question']['answers']|length}} risposte trovate</h6>
+    <a type="button" class="btn btn-success" style="margin-left: auto;"
+      href="{{ url_for('answer.create', survey_id=data['survey_id'], question_id=data['question']['id']) }}">Nuova
+      risposta</a>
+  </div>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Testo</th>
+        <th scope="col">Stato</th>
+        <th scope="col">Azioni</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for answer in data['question']['answers'] %}
+      <tr>
+        <th scope="row">{{ answer['id'] }}</th>
+        <td class="w-70">{{ answer['answer'] }}</td>
+        <td class="w-30">
+          {% if answer['status']=='draft' %} Bozza {% endif %}
+          {% if answer['status']=='active' %} Attivo {% endif %}
+          {% if answer['status']=='inactive' %} Inattivo {% endif %}
+        </td>
+        <td style="width: 0;">
+          <div class="btn-group" role="group">
+            <a href="{{ url_for('answer.update', survey_id=data['survey_id'], question_id=data['question']['id'], answer_id=answer.id) }}"
+              type="button" class="btn btn-outline-warning">Modifica</a>
+            <a href="{{ url_for('answer.delete', survey_id=data['survey_id'], question_id=data['question']['id'], answer_id=answer.id) }}"
+              onclick="return confirm('Conferma per Eliminare definitivamente!')" type="button"
+              class="btn btn-outline-danger">Elimina</a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}

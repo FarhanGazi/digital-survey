@@ -1,12 +1,11 @@
 from flask import Flask
-from flask_login import current_user, login_user, logout_user, login_required
-from sqlalchemy.sql.expression import true
 
 from configs.config import Config
 from configs.sqladb import DB
 
-from ds.helpers.auth import login_manager, requires_roles
+from ds.helpers.auth import login_manager
 from ds.helpers.base import Base
+
 from ds.models.user import User
 from ds.models.survey import Survey
 from ds.models.question import Question
@@ -15,6 +14,12 @@ from ds.models.answer import Answer
 from ds.models.response import Response
 
 import ds.blueprints.auth as authentication
+import ds.blueprints.survey as survey
+import ds.blueprints.question as question
+import ds.blueprints.answer as answer
+import ds.blueprints.user as user
+import ds.blueprints.profile as profile
+import ds.blueprints.filling as filling
 
 
 def create_app():
@@ -23,14 +28,16 @@ def create_app():
 
     # Connect to database
     db = DB('ds')
-    Base.metadata.create_all(db.engine, checkfirst=true)
+    Base.metadata.create_all(db.engine, checkfirst=True)
 
     # Create login manager
     config = Config('ds')
     app.config['SECRET_KEY'] = config.secret_key
     login_manager.init_app(app)
 
+    # Register all blueprints
     app.register_blueprint(authentication.bp)
+<<<<<<< HEAD
 
     # new_user = User(name='Gino', surname='Buonvino', email='gino@buonvino.com', password='123', role='admin')
     # db.session.add(new_user)
@@ -79,5 +86,15 @@ def create_app():
     @requires_roles('admin')
     def admin():
         return 'ADMIN!'
+=======
+    app.register_blueprint(survey.bp)
+    app.register_blueprint(question.bp)
+    app.register_blueprint(answer.bp)
+    app.register_blueprint(user.bp)
+    app.register_blueprint(profile.bp)
+    app.register_blueprint(filling.bp)
+
+    app.add_url_rule("/", endpoint="auth.index")
+>>>>>>> c98811db650ae2ddba4619e10e61d0fb3a16bdd4
 
     return app

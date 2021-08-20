@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %} {{ survey['title'] }} {% endblock %}
+{% block header %} Questionario #{{ survey['id'] }} {% endblock %}
+{% block content %}
+<div class="d-md-flex">
+  <a href="{{ url_for('survey.list') }}" type="button" class="btn btn-outline-secondary">Indietro</a>
+  <a href="{{ url_for('survey.export', id=survey['id']) }}" type="button"
+    class="btn btn-success {% if survey['status'] == 'draft' %} disabled {% endif %}"
+    style="margin-left: auto; {% if survey['status'] == 'draft' %} cursor: not-allowed !important; pointer-events: auto; {% endif %}">Esporta
+    dati</a>
+  <a href="{{ url_for('survey.update', id=survey['id']) }}" type="button" class="btn btn-warning"
+    style="margin-left: auto;">Modifica</a>
+</div>
+<table class="table shadow mt-3 shadow-sm" cellspacing="10">
+  <thead class="thead-dark ">
+    <th class="text-center" colspan="2">Dettagli del questionario</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Titolo</td>
+      <td class="text-left">{{ survey['title'] }}</td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Descrizione</td>
+      <td class="text-left">{{ survey['description'] }}</td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Stato</td>
+      <td>{% if survey['status']=='draft' %} Bozza {% endif %}
+        {% if survey['status']=='active' %} Attivo {% endif %}
+        {% if survey['status']=='inactive' %} Inattivo {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Compilazioni</td>
+      <td>
+        <span class="text-success">{{survey['completed_fillings']}} (Completate)</span> /
+        <span class="text-danger">{{survey['incomplete_fillings']}} (Incomplete)</span>
+      </td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Creata da</td>
+      <td class="text-left">{{ survey['user']['name'] }} {{ survey['user']['surname'] }}</td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Creato il</td>
+      <td class="text-left">{{ survey['created_at'].strftime("%c") }}</td>
+    </tr>
+    <tr>
+      <td class="w-25 bg-secondary text-white border-right text-right">Aggiornato il</td>
+      <td class="text-left">{{ survey['updated_at'].strftime("%c") }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="questions-list" style="margin-top: 50px;">
+  <div class="d-flex">
+    <h6>{{survey['questions']|length}} domande trovate</h6>
+    <a type="button" class="btn btn-success" style="margin-left: auto;"
+      href="{{ url_for('question.create', survey_id=survey['id']) }}">Nuova Domanda</a>
+  </div>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Testo</th>
+        <th scope="col">Descrizione</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Stato</th>
+        <th scope="col">Ordine</th>
+        <th scope="col">Azioni</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for question in survey['questions'] %}
+      <tr>
+        <th scope="row">{{ question['id'] }}</th>
+        <td class="w-25">{{ question['title'] }}</td>
+        <td class="w-25">{{ question['description'] }}</td>
+        <td class="w-25">
+          {% if question['type']=='radio' %} Radio {% endif %}
+          {% if question['type']=='multiple' %} Multipla {% endif %}
+          {% if question['type']=='text' %} Testo {% endif %}
+        </td>
+        <td class="w-25">
+          {% if question['status']=='draft' %} Bozza {% endif %}
+          {% if question['status']=='active' %} Attivo {% endif %}
+          {% if question['status']=='inactive' %} Inattivo {% endif %}
+        </td>
+        <td class="w-25">{{ question['seq'] }}</td>
+        <td style="width: 0;">
+          <div class="btn-group" role="group">
+            <a href="{{ url_for('question.details', survey_id=survey['id'], question_id=question['id']) }}"
+              type="button" class="btn btn-outline-success">Visualizza</a>
+            <a href="{{ url_for('question.update', survey_id=survey['id'], question_id=question['id']) }}" type="button"
+              class="btn btn-outline-warning">Modifica</a>
+            <a href="{{ url_for('question.delete', survey_id=survey['id'], question_id=question['id']) }}"
+              onclick="return confirm('Conferma per Eliminare definitivamente!')" type="button"
+              class="btn btn-outline-danger">Elimina</a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

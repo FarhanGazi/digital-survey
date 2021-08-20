@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %} Modifica domanda {% endblock %}
+{% block header %} Modifica domanda #{{data['question']['id']}} {% endblock %}
+{% block content %}
+<form method="post">
+  <div class="mb-3">
+    <label for="description" class="form-label">Descrizione</label>
+    <input class="form-control" id="description" name="description" value="{{data['question']['description']}}" required>
+  </div>
+  <div class="mb-3">
+    <label for="type" class="form-label">Tipo</label>
+    <select class="form-select" id="type" name="type" required>
+      <option value="radio" {% if data['question']['type']=='radio' %} selected {% endif %}>Radio</option>
+      <option value="multiple" {% if data['question']['type']=='multiple' %} selected {% endif %}>Multipla</option>
+      <option value="text" {% if data['question']['type']=='text' %} selected {% endif %}>Testo</option>
+    </select>
+  </div>
+  <div class="d-md-flex">
+    <div class="mb-3" style="flex-grow: 1; margin-right: 10px;">
+      <label for="status" class="form-label">Stato</label>
+      <select class="form-select" id="status" name="status">
+        <option value="draft" {% if data['question']['status']=='draft' %} selected {% endif %}>Bozza</option>
+        <option value="active" {% if data['question']['status']=='active' %} selected {% endif %}>Attivo</option>
+        <option value="inactive" {% if data['question']['status']=='inactive' %} selected {% endif %}>Inattivo</option>
+      </select>
+    </div>
+    <div class="mb-3" style="flex-grow: 1;">
+      <label for="seq" class="form-label">Ordine</label>
+      <input class="form-control" id="seq" name="seq" type="number" max="{{data['total']}}" min="1" value="{{data['question']['seq']}}">
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="title" class="form-label">Testo</label>
+    <textarea class="form-control" id="title" name="title" rows="6" style="max-height: 150px; min-height: 150px;"
+      required>{{data['question']['title']}}</textarea>
+  </div>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a class="btn btn-outline-secondary" href="{{ url_for('question.details', survey_id=data['survey_id'], question_id=data['question']['id']) }}">Annulla</a>
+    <a href="{{ url_for('question.delete', survey_id=data['survey_id'], question_id=data['question']['id']) }}"
+      onclick="return confirm('Conferma per Eliminare definitivamente!')" type="button" class="btn btn-danger">Elimina</a>
+    <button type="submit" class="btn btn-warning">Modifica</button>
+  </div>
+</form>
+{% endblock %}

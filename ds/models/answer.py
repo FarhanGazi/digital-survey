@@ -28,7 +28,7 @@ class Answer(Base):
         "Response", back_populates="answer", cascade="all, delete, delete-orphan")
 
     def __repr__(self):
-        return "<Survey(answer='%s', status='%s')>" % (self.answer, self.status)
+        return "<Answer(answer='%s', status='%s')>" % (self.answer, self.status)
 
 
 ##########################################

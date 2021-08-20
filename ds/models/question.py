@@ -30,4 +30,4 @@ class Question(Base):
     fillings = relationship("Filling", back_populates="question", cascade="all, delete, delete-orphan")
 
     def __repr__(self):
-        return "<Survey(title='%s', status='%s')>" % (self.title, self.status)
+        return "<Question(title='%s', status='%s')>" % (self.title, self.status)

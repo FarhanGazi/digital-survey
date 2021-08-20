@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %} Questionari {% endblock %}
+{% block header %} Lista Questionari {% endblock %}
+{% block content %}
+<div class="d-flex">
+  <h6>{{surveys|length}} questionari trovati</h6>
+  <a type="button" class="btn btn-success" style="margin-left: auto;" href="{{ url_for('survey.create') }}">Nuovo
+    Questionario</a>
+</div>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Titolo</th>
+      <th scope="col">Descrizione</th>
+      <th scope="col">Stato</th>
+      <th scope="col">Azioni</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for survey in surveys %}
+    <tr>
+      <th scope="row">{{ survey['id'] }}</th>
+      <td class="w-25">{{ survey['title'] }}</td>
+      <td class="w-25">{{ survey['description'] }}</td>
+      <td class="w-25">
+        {% if survey['status']=='draft' %} Bozza {% endif %}
+        {% if survey['status']=='active' %} Attivo {% endif %}
+        {% if survey['status']=='inactive' %} Inattivo {% endif %}
+      </td>
+      <td style="width: 0;">
+        <div class="btn-group" role="group">
+          <a href="{{ url_for('survey.details', id=survey['id']) }}" type="button"
+            class="btn btn-outline-success">Visualizza</a>
+          <a href="{{ url_for('survey.update', id=survey['id']) }}" type="button"
+            class="btn btn-outline-warning">Modifica</a>
+          <a href="{{ url_for('survey.delete', id=survey['id']) }}"
+            onclick="return confirm('Conferma per Eliminare definitivamente!')" type="button"
+            class="btn btn-outline-danger">Elimina</a>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

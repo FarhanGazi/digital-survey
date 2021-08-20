@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %} Nuova domanda {% endblock %}
+{% block header %} Nuova domanda {% endblock %}
+{% block content %}
+<form method="post">
+  <div class="mb-3">
+    <label for="description" class="form-label">Descrizione</label>
+    <input class="form-control" id="description" name="description" required>
+  </div>
+  <div class="mb-3">
+    <label for="type" class="form-label">Tipo</label>
+    <select class="form-select" id="type" name="type" required>
+      <option value="radio">Radio</option>
+      <option value="multiple">Multipla</option>
+      <option value="text">Testo</option>
+    </select>
+  </div>
+  <div class="d-md-flex">
+    <div class="mb-3" style="flex-grow: 1; margin-right: 10px;">
+      <label for="status" class="form-label">Stato</label>
+      <select class="form-select" id="status" name="status">
+        <option value="draft">Bozza</option>
+        <option value="active">Attivo</option>
+        <option value="inactive">Inattivo</option>
+      </select>
+    </div>
+    <div class="mb-3" style="flex-grow: 1;">
+      <label for="seq" class="form-label">Ordine</label>
+      <input class="form-control" id="seq" name="seq" type="number" max="{{data['total']}}" min="1">
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="title" class="form-label">Testo</label>
+    <textarea class="form-control" id="title" name="title" rows="6" style="max-height: 150px; min-height: 150px;"
+      required></textarea>
+  </div>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a class="btn btn-outline-secondary" href="{{ url_for('survey.details', id=data['survey_id']) }}">Annulla</a>
+    <button type="submit" class="btn btn-success">Crea</button>
+  </div>
+</form>
+{% endblock %}

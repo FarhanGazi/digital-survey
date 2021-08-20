@@ -16,7 +16,6 @@ def list():
     users = db.session.query(User).filter(User.id != current_user.id).order_by(User.id.asc()).all()
     return render_template("admin/users/list.html", users=users)
 
-
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 @requires_roles('admin')

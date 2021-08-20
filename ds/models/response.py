@@ -43,7 +43,7 @@ class Response(Base):
 
 
 ##########################################
-# SQL-ALCHEMY TRIGGERS ALTERNATIVE
+# SQL-ALCHEMY TRIGGERS ALTERNATIE
 ##########################################
 
 @event.listens_for(Response, 'before_insert')

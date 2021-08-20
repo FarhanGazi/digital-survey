@@ -46,8 +46,8 @@ class Response(Base):
 # SQL-ALCHEMY TRIGGERS ALTERNATIVE
 ##########################################
 
-@event.listens_for(Survey, 'before_insert')
-@event.listens_for(Survey, 'before_update')
+@event.listens_for(Response, 'before_insert')
+@event.listens_for(Response, 'before_update')
 def check_radio(mapper, connection, target):
     db = DB('ds')
     if target.type == 'radio':

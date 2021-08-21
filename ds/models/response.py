@@ -39,7 +39,7 @@ class Response(Base):
     answer = relationship(Answer, back_populates="responses")
 
     def __repr__(self):
-        return "<Survey(response='%s', type='%s')>" % (self.response, self.type)
+        return "<Response(response='%s', type='%s')>" % (self.response, self.type)
 
 
 ##########################################

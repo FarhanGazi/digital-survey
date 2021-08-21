@@ -1,11 +1,8 @@
 from datetime import date
 from flask import Blueprint, request, render_template, redirect, url_for
-from flask_login import current_user, login_required
+from flask_login import login_required
 
 from ds.helpers.auth import requires_roles
-from ds.models.user import User
-from ds.models.survey import Survey
-from ds.models.question import Question
 from ds.models.answer import Answer
 from configs.sqladb import DB
 
@@ -21,7 +18,7 @@ def create(survey_id, question_id):
       answer = request.form['answer']
       status = request.form['status']
 
-      db = DB('ds')
+      db = DB('admin')
       new_answer = Answer(answer=answer, status=status, question_id=question_id)
       db.session.add(new_answer)
       db.session.commit()
@@ -44,7 +41,7 @@ def update(survey_id, question_id, answer_id):
       text = request.form['answer']
       status = request.form['status']
 
-      db = DB('ds')
+      db = DB('admin')
       answer = db.session.query(Answer).filter(
           Answer.id == answer_id, Answer.question_id == question_id).first()
 
@@ -55,7 +52,7 @@ def update(survey_id, question_id, answer_id):
       return redirect(url_for("question.details", survey_id=survey_id, question_id=question_id))
 
     elif request.method == 'GET':
-      db = DB('ds')
+      db = DB('admin')
       answer = db.session.query(Answer).filter(Answer.id == answer_id, Answer.question_id == question_id).first()
       data = {
         'survey_id': survey_id,
@@ -69,7 +66,7 @@ def update(survey_id, question_id, answer_id):
 @login_required
 @requires_roles('admin')
 def delete(survey_id, question_id, answer_id):
-    db = DB('ds')
+    db = DB('admin')
     answer = db.session.query(Answer).filter(Answer.id == answer_id).first()
     db.session.delete(answer)
     db.session.commit()

@@ -7,10 +7,11 @@ class DB:
         def __init__(self, arg):
             self.username = arg
 
-            if self.username == 'ds':
+            if self.username in ['ds', 'admin', 'panelist']:
               config = Config(self.username)
               self.engine = create_engine(config.database_url, echo=True)
-              self.Session = sessionmaker(bind=self.engine)
+              self.Session = sessionmaker(
+                  bind=self.engine, expire_on_commit=False)
               self.session = self.Session()
 
         def __str__(self):

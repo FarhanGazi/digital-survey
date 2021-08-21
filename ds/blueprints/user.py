@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash
+from flask import Blueprint, request, render_template, redirect, url_for
 from flask_login import current_user, login_required
 
 from ds.helpers.auth import requires_roles
@@ -12,7 +12,7 @@ bp = Blueprint("user", __name__, url_prefix="/users")
 @login_required
 @requires_roles('admin')
 def list():
-    db = DB('ds')
+    db = DB('admin')
     users = db.session.query(User).filter(User.id != current_user.id).order_by(User.id.asc()).all()
     return render_template("admin/users/list.html", users=users)
 
@@ -27,7 +27,7 @@ def create():
         email = request.form["email"]
         password = request.form["password"]
         role = request.form["role"]
-        db = DB('ds')
+        db = DB('admin')
         new_user = User(name=name, surname=surname, email=email, role=role, password=password)
         db.session.add(new_user)
         db.session.commit()
@@ -48,7 +48,7 @@ def update(id):
         password = request.form["password"]
         role = request.form["role"]
 
-        db = DB('ds')
+        db = DB('admin')
         user = db.session.query(User).filter(User.id == id).first()
         user.name = name
         user.surname = surname
@@ -60,7 +60,7 @@ def update(id):
         return redirect(url_for("user.list"))
 
     elif request.method == 'GET':
-        db = DB('ds')
+        db = DB('admin')
         user = db.session.query(User).filter(User.id == id).first()
         return render_template("admin/users/update.html", user=user)
 
@@ -69,7 +69,7 @@ def update(id):
 @login_required
 @requires_roles('admin')
 def delete(id):
-    db = DB('ds')
+    db = DB('admin')
     user = db.session.query(User).filter(User.id == id).first()
     db.session.delete(user)
     db.session.commit()

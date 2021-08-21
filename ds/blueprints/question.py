@@ -1,10 +1,8 @@
 from datetime import date
 from flask import Blueprint, request, render_template, redirect, url_for
-from flask_login import current_user, login_required
+from flask_login import login_required
 
 from ds.helpers.auth import requires_roles
-from ds.models.user import User
-from ds.models.survey import Survey
 from ds.models.question import Question
 from configs.sqladb import DB
 
@@ -16,7 +14,7 @@ bp = Blueprint("question", __name__,
 @login_required
 @requires_roles('admin')
 def details(survey_id, question_id):
-    db = DB('ds')
+    db = DB('admin')
     question = db.session.query(Question).filter(
         Question.id == question_id, Question.survey_id == survey_id).first()
 
@@ -38,7 +36,7 @@ def create(survey_id):
         status = request.form["status"]
         description = request.form["description"]
 
-        db = DB('ds')
+        db = DB('admin')
         new_question = Question(title=title, description=description,
                                 type=type, seq=seq, status=status, survey_id=survey_id)
         db.session.add(new_question)
@@ -47,7 +45,7 @@ def create(survey_id):
         return redirect(url_for("question.details", survey_id=survey_id, question_id=new_question.id))
 
     elif request.method == 'GET':
-        db = DB('ds')
+        db = DB('admin')
         questions_count = db.session.query(Question).filter(
             Question.survey_id == survey_id).count() + 1
 
@@ -69,7 +67,7 @@ def update(survey_id, question_id):
         status = request.form["status"]
         description = request.form["description"]
 
-        db = DB('ds')
+        db = DB('admin')
         question = db.session.query(Question).filter(Question.id == question_id, Question.survey_id == survey_id).first()
         question.type = type
         question.title = title
@@ -81,7 +79,7 @@ def update(survey_id, question_id):
         return redirect(url_for("question.details", survey_id=survey_id, question_id=question.id))
 
     elif request.method == 'GET':
-        db = DB('ds')
+        db = DB('admin')
         question = db.session.query(Question).filter(
             Question.id == question_id, Question.survey_id == survey_id).first()
 
@@ -100,7 +98,7 @@ def update(survey_id, question_id):
 @login_required
 @requires_roles('admin')
 def delete(survey_id, question_id):
-    db = DB('ds')
+    db = DB('admin')
     question = db.session.query(Question).filter(Question.id == question_id).first()
     db.session.delete(question)
     db.session.commit()

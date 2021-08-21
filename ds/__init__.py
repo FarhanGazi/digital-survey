@@ -6,12 +6,12 @@ from configs.sqladb import DB
 from ds.helpers.auth import login_manager
 from ds.helpers.base import Base
 
-from ds.models.user import User
-from ds.models.survey import Survey
-from ds.models.question import Question
-from ds.models.filling import Filling
-from ds.models.answer import Answer
-from ds.models.response import Response
+import ds.models.user
+import ds.models.survey
+import ds.models.question
+import ds.models.filling
+import ds.models.answer
+import ds.models.response
 
 import ds.blueprints.auth as authentication
 import ds.blueprints.survey as survey

@@ -8,3 +8,23 @@ ds:
     databasename: databasename
   application:
     secretkey: secret
+admin:
+  database:
+    driver: postgresql
+    username: username
+    password: password
+    host: localhost
+    port: 5432
+    databasename: databasename
+  application:
+    secretkey: secret
+panelist:
+  database:
+    driver: postgresql
+    username: username
+    password: password
+    host: localhost
+    port: 5432
+    databasename: databasename
+  application:
+    secretkey: secret

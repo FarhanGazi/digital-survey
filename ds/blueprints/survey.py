@@ -16,7 +16,7 @@ bp = Blueprint("survey", __name__, url_prefix="/surveys")
 @login_required
 @requires_roles('admin')
 def list():
-    db = DB('ds')
+    db = DB('admin')
     surveys = db.session.query(Survey).order_by(Survey.id.asc()).all()
     return render_template("admin/surveys/list.html", surveys=surveys)
 
@@ -25,7 +25,7 @@ def list():
 @login_required
 @requires_roles('admin')
 def details(id):
-    db = DB('ds')
+    db = DB('admin')
     survey = db.session.query(Survey).filter(Survey.id == id).first()
     completed_fillings = db.session.query(Filling.user_id).filter(
         Filling.survey_id == id, Filling.status == 'completed').group_by(Filling.user_id).count()
@@ -46,11 +46,16 @@ def create():
         title = request.form["title"]
         status = request.form["status"]
         description = request.form["description"]
-        db = DB('ds')
+        db = DB('admin')
         new_surevy = Survey(title=title, description=description,
                             status=status, user_id=current_user.id)
         db.session.add(new_surevy)
         db.session.commit()
+
+        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        print(new_surevy)
+        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+
         return redirect(url_for("survey.details", id=new_surevy.id))
 
     elif request.method == 'GET':
@@ -65,7 +70,7 @@ def update(id):
         title = request.form["title"]
         status = request.form["status"]
         description = request.form["description"]
-        db = DB('ds')
+        db = DB('admin')
         survey = db.session.query(Survey).filter(Survey.id == id).first()
         survey.title = title
         survey.status = status
@@ -74,7 +79,7 @@ def update(id):
         return redirect(url_for("survey.details", id=survey.id))
 
     elif request.method == 'GET':
-        db = DB('ds')
+        db = DB('admin')
         survey = db.session.query(Survey).filter(Survey.id == id).first()
         return render_template("admin/surveys/update.html", survey=survey)
 
@@ -83,7 +88,7 @@ def update(id):
 @login_required
 @requires_roles('admin')
 def delete(id):
-    db = DB('ds')
+    db = DB('admin')
     survey = db.session.query(Survey).filter(Survey.id == id).first()
     db.session.delete(survey)
     db.session.commit()
@@ -94,7 +99,7 @@ def delete(id):
 @login_required
 @requires_roles('admin')
 def export(id):
-    db = DB('ds')
+    db = DB('admin')
 
     ###############################################################
     # Get Survey by ID in order to set export data filename
@@ -175,9 +180,9 @@ def export(id):
     # Creating csv file and writing header and data rows
     ##################################################################
     with open(f'exports/{filename}', 'w', newline='\n', encoding='utf-8') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=';')
-        spamwriter.writerow(header)
-        spamwriter.writerows(data)
+        datawriter = csv.writer(csvfile, delimiter=';')
+        datawriter.writerow(header)
+        datawriter.writerows(data)
 
     ##################################################################
     # Send csv file as response attachment

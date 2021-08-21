@@ -1,4 +1,3 @@
-from sqlalchemy.sql.operators import is_false
 from ds.models.question import Question
 from flask import Blueprint, request, render_template, redirect, url_for
 from flask_login import current_user, login_required
@@ -17,7 +16,7 @@ bp = Blueprint("filling", __name__, url_prefix="/fillings")
 @login_required
 @requires_roles('panelist')
 def list():
-    db = DB('ds')
+    db = DB('panelist')
     surveys = db.session.query(Survey).filter(Survey.id.not_in(select(Filling.survey_id).where(
         Filling.status == 'completed', Filling.user_id == current_user.id).subquery()), Survey.status == 'active').order_by(Survey.id.asc()).all()
 
@@ -28,7 +27,7 @@ def list():
 @login_required
 @requires_roles('panelist')
 def start(survey_id):
-    db = DB('ds')
+    db = DB('panelist')
     survey = db.session.query(Survey).filter(Survey.id == survey_id).first()
     filling = db.session.query(Filling).filter(
         Filling.survey_id == survey.id, Filling.user_id == current_user.id).first()
@@ -45,7 +44,7 @@ def start(survey_id):
 @login_required
 @requires_roles('panelist')
 def get(filling_id):
-    db = DB('ds')
+    db = DB('panelist')
     filling = db.session.query(Filling).filter(
         Filling.id == filling_id, Filling.user_id == current_user.id).first()
 
@@ -66,7 +65,7 @@ def get(filling_id):
 def save(filling_id):
     if request.method == 'POST':
         type = request.form['type']
-        db = DB('ds')
+        db = DB('panelist')
         filling = db.session.query(Filling).filter(
             Filling.id == filling_id, Filling.user_id == current_user.id).first()
 

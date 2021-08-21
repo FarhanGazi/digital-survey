@@ -11,7 +11,7 @@ class DB:
               config = Config(self.username)
               self.engine = create_engine(config.database_url, echo=True)
               self.Session = sessionmaker(
-                  bind=self.engine, expire_on_commit=False)
+                  bind=self.engine, expire_on_commit=False, autoflush=False)
               self.session = self.Session()
 
         def __str__(self):

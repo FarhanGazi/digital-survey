@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, CheckConstraint
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, CheckConstraint, Index
 from sqlalchemy.orm import relationship
 from sqlalchemy import event
 from sqlalchemy.orm.exc import FlushError
@@ -41,6 +41,13 @@ class Response(Base):
     def __repr__(self):
         return "<Response(response='%s', type='%s')>" % (self.response, self.type)
 
+
+##########################################
+# SQL-ALCHEMY INDEX ALTERNATIVE
+##########################################
+
+Index('user_response', Response.user_id,
+      Response.question_id, unique=True)
 
 ##########################################
 # SQL-ALCHEMY TRIGGERS ALTERNATIVE

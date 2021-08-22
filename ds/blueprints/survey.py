@@ -52,10 +52,6 @@ def create():
         db.session.add(new_surevy)
         db.session.commit()
 
-        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-        print(new_surevy)
-        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-
         return redirect(url_for("survey.details", id=new_surevy.id))
 
     elif request.method == 'GET':

@@ -3,7 +3,6 @@ import datetime
 from sqlalchemy import Column, String, Integer, DateTime, CheckConstraint
 from sqlalchemy.orm import validates, relationship
 from flask_login import UserMixin
-from sqlalchemy.sql.expression import select
 
 from ds.helpers.base import Base
 

@@ -1,4 +1,5 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash
+from flask import Blueprint, request, render_template, redirect, url_for
+from flask.helpers import flash
 from flask_login import current_user, login_required
 
 from ds.models.user import User
@@ -11,22 +12,29 @@ bp = Blueprint("profile", __name__, url_prefix="/profile")
 @login_required
 def update():
     if request.method == 'POST':
-        name = request.form["name"]
-        surname = request.form["surname"]
-        email = request.form["email"]
-        password = request.form["password"]
+        try:
+            name = request.form["name"]
+            surname = request.form["surname"]
+            email = request.form["email"]
+            password = request.form["password"]
 
-        db = DB('ds')
-        user = db.session.query(User).filter(User.id == current_user.id).first()
-        user.name = name
-        user.surname = surname
-        user.email = email
-        user.password = password
-        db.session.commit()
+            db = DB('ds')
+            user = db.session.query(User).filter(
+                User.id == current_user.id).first()
+            user.name = name
+            user.surname = surname
+            user.email = email
+            user.password = password
+            db.session.commit()
 
-        return redirect(url_for("auth.index"))
+            return redirect(url_for("auth.index"))
+        except:
+            db.session.rollback()
+            flash('Alcuni campi non sono validi!')
+            return redirect(url_for("profile.update"))
 
     elif request.method == 'GET':
         db = DB('ds')
-        user = db.session.query(User).filter(User.id == current_user.id).first()
+        user = db.session.query(User).filter(
+            User.id == current_user.id).first()
         return render_template("profile/update.html", user=user)

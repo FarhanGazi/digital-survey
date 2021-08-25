@@ -36,7 +36,7 @@ class Filling(Base):
         "Response", back_populates="filling", cascade="all, delete, delete-orphan")
 
     def __repr__(self):
-        return "<Survey(id='%s', status='%s')>" % (self.id, self.status)
+        return "<Filling(id='%s', status='%s')>" % (self.id, self.status)
 
 ##########################################
 # SQL-ALCHEMY INDEX ALTERNATIVE

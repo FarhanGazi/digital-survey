@@ -12,8 +12,14 @@ bp = Blueprint("user", __name__, url_prefix="/users")
 @login_required
 @requires_roles('admin')
 def list():
-    db = DB('ds')
-    users = db.session.query(User).filter(User.id != current_user.id).order_by(User.id.asc()).all()
+    try:
+        db = DB('admin')
+        users = db.session.query(User).filter(
+            User.id != current_user.id).order_by(User.id.asc()).all()
+    except:
+        db.session.rollback()
+        flash('Qualcosa è andato storto!')
+
     return render_template("admin/users/list.html", users=users)
 
 @bp.route('/create', methods=['GET', 'POST'])
@@ -21,16 +27,23 @@ def list():
 @requires_roles('admin')
 def create():
     if request.method == 'POST':
-        name = request.form["name"]
-        surname = request.form["surname"]
-        email = request.form["email"]
-        password = request.form["password"]
-        role = request.form["role"]
-        db = DB('ds')
-        new_user = User(name=name, surname=surname, email=email, role=role, password=password)
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for("user.list"))
+        try:
+            name = request.form["name"]
+            surname = request.form["surname"]
+            email = request.form["email"]
+            password = request.form["password"]
+            role = request.form["role"]
+            db = DB('admin')
+            new_user = User(name=name, surname=surname,
+                            email=email, role=role, password=password)
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for("user.list"))
+
+        except:
+            db.session.rollback()
+            flash('Alcuni campi non sono valdi!')
+            return redirect(url_for("user.create"))
 
     elif request.method == 'GET':
         return render_template("admin/users/create.html")
@@ -41,35 +54,52 @@ def create():
 @requires_roles('admin')
 def update(id):
     if request.method == 'POST':
-        name = request.form["name"]
-        surname = request.form["surname"]
-        email = request.form["email"]
-        password = request.form["password"]
-        role = request.form["role"]
+        try:
+            name = request.form["name"]
+            surname = request.form["surname"]
+            email = request.form["email"]
+            password = request.form["password"]
+            role = request.form["role"]
 
-        db = DB('ds')
-        user = db.session.query(User).filter(User.id == id).first()
-        user.name = name
-        user.surname = surname
-        user.email = email
-        user.password = password
-        user.role = role
-        db.session.commit()
+            db = DB('admin')
+            user = db.session.query(User).filter(User.id == id).first()
+            user.name = name
+            user.surname = surname
+            user.email = email
+            user.password = password
+            user.role = role
+            db.session.commit()
 
-        return redirect(url_for("user.list"))
+            return redirect(url_for("user.list"))
+
+        except:
+            db.session.rollback()
+            flash('Alcuni campi non sono valdi!')
+            return redirect(url_for("user.update", id=id))
 
     elif request.method == 'GET':
-        db = DB('ds')
-        user = db.session.query(User).filter(User.id == id).first()
-        return render_template("admin/users/update.html", user=user)
+        try:
+            db = DB('admin')
+            user = db.session.query(User).filter(User.id == id).first()
+            return render_template("admin/users/update.html", user=user)
+
+        except:
+            db.session.rollback()
+            flash('Utente inesistente!')
+            return redirect(url_for("user.list"))
 
 
 @bp.route('/<int:id>/delete')
 @login_required
 @requires_roles('admin')
 def delete(id):
-    db = DB('ds')
-    user = db.session.query(User).filter(User.id == id).first()
-    db.session.delete(user)
-    db.session.commit()
+    try:
+        db = DB('admin')
+        user = db.session.query(User).filter(User.id == id).first()
+        db.session.delete(user)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        flash('Utente inesistente!')
+
     return redirect(url_for("user.list"))

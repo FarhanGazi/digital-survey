@@ -1,4 +1,5 @@
 from flask import Blueprint, request, render_template, redirect, url_for, g
+from flask.helpers import flash
 from flask_login import login_user, login_required, logout_user, current_user
 
 from ds.models.user import User
@@ -10,11 +11,17 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 @bp.route('/signin', methods=['GET', 'POST'])
 def signin():
     if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
-        db = DB('ds')
-        user = db.session.query(User).filter(
-            User.email == email, User.password == password).first()
+        try:
+            email = request.form["email"]
+            password = request.form["password"]
+            db = DB('ds')
+            user = db.session.query(User).filter(
+                User.email == email, User.password == password).first()
+        except:
+            db.session.rollback()
+            flash('Qualcosa è andato storto!')
+            return redirect(url_for("auth.signin"))
+
         if user:
             login_user(user)
             if user.role == 'admin':
@@ -22,6 +29,7 @@ def signin():
             elif user.role == 'panelist':
                 return redirect(url_for("filling.list"))
         else:
+            flash('Credenziali non valide!')
             return redirect(url_for("auth.signin"))
     else:
         return render_template("auth/signin.html")
@@ -30,17 +38,23 @@ def signin():
 @bp.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == "POST":
-        name = request.form["name"]
-        surname = request.form["surname"]
-        email = request.form["email"]
-        password = request.form["password"]
+        try:
+            name = request.form["name"]
+            surname = request.form["surname"]
+            email = request.form["email"]
+            password = request.form["password"]
 
-        db = DB('ds')
-        new_user = User(name=name, surname=surname,
-                        email=email, role='panelist', password=password)
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for("auth.signin"))
+            db = DB('ds')
+            new_user = User(name=name, surname=surname,
+                            email=email, role='panelist', password=password)
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for("auth.signin"))
+        except:
+            db.session.rollback()
+            flash('Utente già esistente!')
+            return redirect(url_for("auth.signup"))
+
     elif request.method == "GET":
         return render_template("auth/signup.html")
 

@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, CheckConstraint
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, CheckConstraint, Index
 from sqlalchemy.orm import relationship
 from sqlalchemy import event
 from sqlalchemy.orm.exc import FlushError
@@ -39,11 +39,22 @@ class Response(Base):
     answer = relationship(Answer, back_populates="responses")
 
     def __repr__(self):
-        return "<Survey(response='%s', type='%s')>" % (self.response, self.type)
+        return "<Response(response='%s', type='%s')>" % (self.response, self.type)
 
 
 ##########################################
+<<<<<<< HEAD
 # SQL-ALCHEMY TRIGGERS ALTERNATIE
+=======
+# SQL-ALCHEMY INDEX ALTERNATIVE
+##########################################
+
+Index('user_response', Response.user_id,
+      Response.question_id, unique=True)
+
+##########################################
+# SQL-ALCHEMY TRIGGERS ALTERNATIVE
+>>>>>>> 87e8b18723781b961b90a05778a30f446ebee4c3
 ##########################################
 
 @event.listens_for(Response, 'before_insert')

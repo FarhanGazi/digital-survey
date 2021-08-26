@@ -43,6 +43,9 @@ class Response(Base):
 
 
 ##########################################
+<<<<<<< HEAD
+# SQL-ALCHEMY TRIGGERS ALTERNATIE
+=======
 # SQL-ALCHEMY INDEX ALTERNATIVE
 ##########################################
 
@@ -51,6 +54,7 @@ Index('user_response', Response.user_id,
 
 ##########################################
 # SQL-ALCHEMY TRIGGERS ALTERNATIVE
+>>>>>>> 87e8b18723781b961b90a05778a30f446ebee4c3
 ##########################################
 
 @event.listens_for(Response, 'before_insert')

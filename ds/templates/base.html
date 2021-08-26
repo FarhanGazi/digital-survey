@@ -58,9 +58,7 @@
       {% block header %}{% endblock %}
     </h3>
     {% for message in get_flashed_messages() %}
-      <div id="alert_message" class="p-3 mb-2 bg-danger text-white" style="border-radius: 5px; border: solid 1px brown;">{{ message }}
-        <button type="button" class="btn-close" aria-label="Close" id="btn_close_alert" onclick="remove()"></button>
-      </div>
+      <div class="p-3 mb-2 bg-danger text-white" style="border-radius: 5px; border: solid 1px brown;">{{ message }}</div>
     {% endfor %}
     {% block content %}
     {% endblock %}
@@ -68,11 +66,5 @@
   <script type="text/javascript" src="{{ url_for('static', filename='javascript/bootstrap.bundle.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='javascript/popper.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='javascript/bootstrap.min.js') }}"></script>
-  <script>
-    function remove(){
-      almes = document.getElementById("alert_message");
-      almes.remove();
-    }
-  </script>
 </body>
 </html>

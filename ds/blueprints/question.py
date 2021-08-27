@@ -9,6 +9,13 @@ bp = Blueprint("question", __name__,
                url_prefix="/surveys/<int:survey_id>/questions")
 
 
+######################################################################################
+# QUESTION DETAILS
+#
+# Endpoint: /surveys/<int:survey_id>/questions/<int:question_id>
+# Parameteres: survey_id, question_id
+# GET question by survey_id and question_id
+######################################################################################
 @bp.route('/<int:question_id>', methods=['GET'])
 @login_required
 @requires_roles('admin')
@@ -29,6 +36,13 @@ def details(survey_id, question_id):
         return redirect(url_for("survey.details", id=survey_id))
 
 
+######################################################################################
+# QUESTION CREATE
+#
+# Endpoint: /surveys/<int:survey_id>/questions/create
+# Parameteres: survey_id
+# GET question creation FORM and in POST saves the question
+######################################################################################
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 @requires_roles('admin')
@@ -71,6 +85,13 @@ def create(survey_id):
             return redirect(url_for("survey.list"))
 
 
+######################################################################################
+# QUESTION UPDATE
+#
+# Endpoint: /surveys/<int:survey_id>/questions/<int:question_id>/update
+# Parameteres: survey_id, question_id
+# GET question FORM and upadtes question data in POST
+######################################################################################
 @bp.route('/<int:question_id>/update', methods=['GET', 'POST'])
 @login_required
 @requires_roles('admin')
@@ -122,6 +143,13 @@ def update(survey_id, question_id):
             return redirect(url_for("survey.list"))
 
 
+######################################################################################
+# QUESTION DELETE
+#
+# Endpoint: /surveys/<int:survey_id>/questions/<int:question_id>/delete
+# Parameteres: survey_id, question_id
+# DELETE question by ID
+######################################################################################
 @bp.route('/<int:question_id>/delete')
 @login_required
 @requires_roles('admin')

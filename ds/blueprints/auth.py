@@ -8,6 +8,13 @@ from configs.sqladb import DB
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
+######################################################################################
+# AUTH SIGNIN
+#
+# Endpoint: /auth/signin
+# Parameteres: -
+# When in GET shows signin FORM, when in POST executes signin and redirects home
+######################################################################################
 @bp.route('/signin', methods=['GET', 'POST'])
 def signin():
     if request.method == "POST":
@@ -35,6 +42,13 @@ def signin():
         return render_template("auth/signin.html")
 
 
+######################################################################################
+# AUTH SIGNUP
+#
+# Endpoint: /auth/signup
+# Parameteres: -
+# When in GET shows signup FORM, when in POST registres new user
+######################################################################################
 @bp.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == "POST":
@@ -59,6 +73,13 @@ def signup():
         return render_template("auth/signup.html")
 
 
+######################################################################################
+# AUTH LOGOUT
+#
+# Endpoint: /auth/logout
+# Parameteres: -
+# Logouts the user
+######################################################################################
 @bp.route('/logout')
 @login_required
 def logout():
@@ -67,6 +88,13 @@ def logout():
     return redirect(url_for("auth.signin"))
 
 
+######################################################################################
+# AUTH INDEX
+#
+# Endpoint: /auth/index
+# Parameteres: -
+# Redirects to the right home path based on user role
+######################################################################################
 @bp.route('/index')
 @login_required
 def index():

@@ -8,6 +8,13 @@ from configs.sqladb import DB
 bp = Blueprint("profile", __name__, url_prefix="/profile")
 
 
+######################################################################################
+# PROFILE UPDATE
+#
+# Endpoint: /profile/update
+# Parameteres: -
+# When in GET shows user profile update with its data, when in POST saves new data
+######################################################################################
 @bp.route('/update', methods=['GET', 'POST'])
 @login_required
 def update():

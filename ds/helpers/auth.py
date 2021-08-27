@@ -8,6 +8,9 @@ from ds.models.user import User
 login_manager = LoginManager()
 
 
+######################################################################################
+# User loaded decoretor
+######################################################################################
 @login_manager.user_loader
 def load_user(user_id):
     db = DB('ds')
@@ -16,11 +19,17 @@ def load_user(user_id):
     return user
 
 
+######################################################################################
+# UNAUTHORIZED manager decorator
+######################################################################################
 @login_manager.unauthorized_handler
 def unauthorized_callback():
     return redirect(url_for("auth.signin"))
 
 
+######################################################################################
+# ROLE CHECK decorator
+######################################################################################
 def requires_roles(*roles):
     def wrapper(f):
         @wraps(f)

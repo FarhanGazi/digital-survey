@@ -2,6 +2,10 @@ import confuse
 from os import path
 
 
+######################################################################################
+# CONFIGURATION CLASS - SINGLETON PATTERN
+# Loades configurations based on roles
+######################################################################################
 class Config:
     class __Config:
         def __init__(self, arg):

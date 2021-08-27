@@ -9,6 +9,13 @@ bp = Blueprint("answer", __name__,
                url_prefix="/surveys/<int:survey_id>/questions/<int:question_id>/answers")
 
 
+######################################################################################
+# ANSWER CREATE
+#
+# Endpoint: /surveys/<int:survey_id>/questions/<int:question_id>/answer/create
+# Parameteres: survey_id, question_id
+# Method which creates Answers when in POST and shows Answer creation FROM when in GET
+######################################################################################
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 @requires_roles('admin')
@@ -38,6 +45,13 @@ def create(survey_id, question_id):
         return render_template("admin/answers/create.html", data=data)
 
 
+######################################################################################
+# ANSWER UPDATE
+#
+# Endpoint: /surveys/<int:survey_id>/questions/<int:question_id>/answer/update
+# Parameteres: survey_id, question_id, answer_id
+# Method which updates Answers when in POST and shows Answer creation FROM when in GET
+######################################################################################
 @bp.route('/<int:answer_id>/update', methods=['GET', 'POST'])
 @login_required
 @requires_roles('admin')
@@ -74,6 +88,13 @@ def update(survey_id, question_id, answer_id):
         return render_template("admin/answers/update.html", data=data)
 
 
+######################################################################################
+# ANSWER DELETE
+#
+# Endpoint: /surveys/<int:survey_id>/questions/<int:question_id>/answer/delete
+# Parameteres: survey_id, question_id, answer_id
+# Method to delete Answers
+########################################################################################
 @bp.route('/<int:answer_id>/delete')
 @login_required
 @requires_roles('admin')

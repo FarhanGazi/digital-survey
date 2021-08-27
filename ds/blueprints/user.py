@@ -8,6 +8,13 @@ from configs.sqladb import DB
 bp = Blueprint("user", __name__, url_prefix="/users")
 
 
+######################################################################################
+# USERS LIST
+#
+# Endpoint: /users/
+# Parameteres: -
+# GET all users
+######################################################################################
 @bp.route('/', methods=['GET'])
 @login_required
 @requires_roles('admin')
@@ -23,6 +30,13 @@ def list():
     return render_template("admin/users/list.html", users=users)
 
 
+######################################################################################
+# USERS CREATE
+#
+# Endpoint: /users/create
+# Parameteres: -
+# GET user creation FORM and creates user in POST
+######################################################################################
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 @requires_roles('admin')
@@ -50,6 +64,13 @@ def create():
         return render_template("admin/users/create.html")
 
 
+######################################################################################
+# USERS UPDATE
+#
+# Endpoint: /<int:id>/update
+# Parameteres: id
+# GET user upadte FORM with its data and updates user in POST
+######################################################################################
 @bp.route('/<int:id>/update', methods=['GET', 'POST'])
 @login_required
 @requires_roles('admin')
@@ -90,6 +111,13 @@ def update(id):
             return redirect(url_for("user.list"))
 
 
+######################################################################################
+# USERS DELETE
+#
+# Endpoint: /<int:id>/delete
+# Parameteres: id
+# DELETE user by ID
+######################################################################################
 @bp.route('/<int:id>/delete')
 @login_required
 @requires_roles('admin')

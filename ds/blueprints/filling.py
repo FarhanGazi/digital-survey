@@ -12,6 +12,13 @@ from configs.sqladb import DB
 bp = Blueprint("filling", __name__, url_prefix="/fillings")
 
 
+######################################################################################
+# FILLING LIST
+#
+# Endpoint: /fillings/
+# Parameteres: -
+# Return all the active surveys for fillings
+######################################################################################
 @bp.route('/', methods=['GET'])
 @login_required
 @requires_roles('panelist')
@@ -26,6 +33,13 @@ def list():
     return render_template("fillings/list.html", surveys=surveys)
 
 
+######################################################################################
+# FILLING START
+#
+# Endpoint: /fillings/start/<int:survey_id>
+# Parameteres: survey_id
+# Recovers an exsiting filling for survey or starts new one
+######################################################################################
 @bp.route('/start/<int:survey_id>', methods=['GET'])
 @login_required
 @requires_roles('panelist')
@@ -48,6 +62,13 @@ def start(survey_id):
     return redirect(url_for("filling.get", filling_id=filling.id))
 
 
+######################################################################################
+# FILLING GET
+#
+# Endpoint: /fillings/<int:filling_id>
+# Parameteres: filling_id
+# Recovers an exsiting filling and if incomplete redirects to the last question
+######################################################################################
 @bp.route('/<int:filling_id>', methods=['GET'])
 @login_required
 @requires_roles('panelist')
@@ -71,6 +92,13 @@ def get(filling_id):
     return render_template("fillings/question.html", question=question)
 
 
+######################################################################################
+# FILLING SAVE
+#
+# Endpoint: /fillings/<int:filling_id>/save
+# Parameteres: filling_id
+# Saves the responses based on question type
+######################################################################################
 @bp.route('/<int:filling_id>/save', methods=['GET', 'POST'])
 @login_required
 @requires_roles('panelist')

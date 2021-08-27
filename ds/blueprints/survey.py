@@ -13,6 +13,13 @@ from configs.sqladb import DB
 bp = Blueprint("survey", __name__, url_prefix="/surveys")
 
 
+######################################################################################
+# SURVEY LIST
+#
+# Endpoint: /surveys/
+# Parameteres: -
+# GET all surveys
+######################################################################################
 @bp.route('/', methods=['GET'])
 @login_required
 @requires_roles('admin')
@@ -27,6 +34,13 @@ def list():
     return render_template("admin/surveys/list.html", surveys=surveys)
 
 
+######################################################################################
+# SURVEY DETAILS
+#
+# Endpoint: /surveys/<int:id>
+# Parameteres: id
+# GET survey details with filling infos by ID
+######################################################################################
 @bp.route('/<int:id>', methods=['GET'])
 @login_required
 @requires_roles('admin')
@@ -50,6 +64,13 @@ def details(id):
         return redirect(url_for("survey.list"))
 
 
+######################################################################################
+# SURVEY CREATE
+#
+# Endpoint: /surveys/create
+# Parameteres:
+# GET survey creation FORM and creates new survey in POST
+######################################################################################
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 @requires_roles('admin')
@@ -75,6 +96,13 @@ def create():
         return render_template("admin/surveys/create.html")
 
 
+######################################################################################
+# SURVEY UPDATE
+#
+# Endpoint: /surveys/<int:id>/update
+# Parameteres: id
+# GET survey update FORM and saves survey data in POST
+######################################################################################
 @bp.route('/<int:id>/update', methods=['GET', 'POST'])
 @login_required
 @requires_roles('admin')
@@ -109,6 +137,13 @@ def update(id):
             return redirect(url_for("survey.list"))
 
 
+######################################################################################
+# SURVEY DELETE
+#
+# Endpoint: /surveys/<int:id>/delete
+# Parameteres: id
+# DELETE survey by ID
+######################################################################################
 @bp.route('/<int:id>/delete')
 @login_required
 @requires_roles('admin')
@@ -124,6 +159,15 @@ def delete(id):
 
     return redirect(url_for("survey.list"))
 
+
+######################################################################################
+# SURVEY EXPORT
+#
+# Endpoint: /surveys/<int:id>/export
+# Parameteres: id
+# EXPORT all responses related to a survey joining responses, fillings, questions and
+# answers tables and returs a CSV file with all the data
+######################################################################################
 @bp.route('/<int:id>/export', methods=['GET'])
 @login_required
 @requires_roles('admin')

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %} Modifica risposta {% endblock %}
+{% block header %} Modifica risposta #{{ data['answer']['id'] }} {% endblock %}
+{% block content %}
+<form method="post">
+  <div class="mb-3">
+    <label for="status" class="form-label">Stato</label>
+    <select class="form-select" id="status" name="status">
+      <option value="draft" {% if data['answer']['status'] == 'draft' %} selected {% endif %}>Bozza</option>
+      <option value="active" {% if data['answer']['status'] == 'active' %} selected {% endif %}>Attivo</option>
+      <option value="inactive" {% if data['answer']['status'] == 'inactive' %} selected {% endif %}>Inattivo</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="answer" class="form-label">Testo</label>
+    <textarea class="form-control" id="answer" name="answer" rows="6"
+      style="max-height: 150px; min-height: 150px;" required>{{ data['answer']['answer'] }}</textarea>
+  </div>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a class="btn btn-outline-secondary"
+      href="{{ url_for('question.details', survey_id=data['survey_id'], question_id=data['question_id']) }}">Annulla</a>
+    <a href="{{ url_for('answer.delete', survey_id=data['survey_id'], question_id=data['question_id'], answer_id=data['answer']['id']) }}"
+      onclick="return confirm('Conferma per Eliminare definitivamente!')" type="button"
+      class="btn btn-danger">Elimina</a>
+    <button type="submit" class="btn btn-warning">Modifica</button>
+  </div>
+</form>
+{% endblock %}

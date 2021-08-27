@@ -1,5 +1,7 @@
 venv/
 
+exports/**/*.csv
+
 config.yaml
 
 *.pyc

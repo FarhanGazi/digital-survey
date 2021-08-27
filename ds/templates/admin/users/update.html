@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %} Modifica utente {% endblock %}
+{% block header %} Modifica utente #{{user['id']}} {% endblock %}
+{% block content %}
+<form method="post">
+  <div class="mb-3">
+    <label for="name" class="form-label">Nome</label>
+    <input class="form-control" id="name" name="name" value="{{user['name']}}">
+  </div>
+  <div class="mb-3">
+    <label for="surname" class="form-label">Cognome</label>
+    <input class="form-control" id="surname" name="surname" value="{{user['surname']}}">
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input class="form-control" id="email" name="email" type="email" value="{{user['email']}}" required>
+  </div>
+  <div class="mb-3">
+    <label for="role" class="form-label">Ruolo</label>
+    <select class="form-select" id="role" name="role">
+      <option value="admin" {% if user['role'] == 'admin' %} selected {% endif %}>Amministratore</option>
+      <option value="panelist" {% if user['role'] == 'panelist' %} selected {% endif %}>Panelista</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Password</label>
+    <input class="form-control" id="password" name="password" type="password"  value="{{user['password']}}" required>
+  </div>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a class="btn btn-outline-secondary" href="{{ url_for('user.list') }}">Annulla</a>
+    <a href="{{ url_for('user.delete', id=user['id']) }}"
+      onclick="return confirm('Conferma per Eliminare definitivamente!')" type="button"
+      class="btn btn-danger">Elimina</a>
+    <button type="submit" class="btn btn-warning">Modifica</button>
+  </div>
+</form>
+{% endblock %}

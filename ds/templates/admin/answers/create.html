@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %} Nuova risposta {% endblock %}
+{% block header %} Nuova risposta {% endblock %}
+{% block content %}
+<form method="post">
+  <div class="mb-3">
+    <label for="status" class="form-label">Stato</label>
+    <select class="form-select" id="status" name="status">
+      <option value="draft">Bozza</option>
+      <option value="active">Attivo</option>
+      <option value="inactive">Inattivo</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="answer" class="form-label">Testo</label>
+    <textarea class="form-control" id="answer" name="answer" rows="6"
+      style="max-height: 150px; min-height: 150px;" required></textarea>
+  </div>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a class="btn btn-outline-secondary"
+      href="{{ url_for('question.details', survey_id=data['survey_id'], question_id=data['question_id']) }}">Annulla</a>
+    <button type="submit" class="btn btn-success">Crea</button>
+  </div>
+</form>
+{% endblock %}

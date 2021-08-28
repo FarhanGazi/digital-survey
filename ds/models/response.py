@@ -45,14 +45,12 @@ class Response(Base):
 ##########################################
 # SQL-ALCHEMY INDEX ALTERNATIVE
 ##########################################
+Index('user_response', Response.user_id, Response.question_id)
 
-Index('user_response', Response.user_id,
-      Response.question_id, unique=True)
 
 ##########################################
 # SQL-ALCHEMY TRIGGERS ALTERNATIVE
 ##########################################
-
 @event.listens_for(Response, 'before_insert')
 @event.listens_for(Response, 'before_update')
 def check_radio(mapper, connection, target):

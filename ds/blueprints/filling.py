@@ -1,3 +1,4 @@
+from ds.models.answer import Answer
 from ds.models.question import Question
 from flask import Blueprint, request, render_template, redirect, url_for, flash
 from flask_login import current_user, login_required
@@ -83,6 +84,7 @@ def get(filling_id):
 
         question = db.session.query(Question).filter(
             Question.id == filling.question_id, Question.survey_id == filling.survey_id, Question.status == 'active').first()
+        question.answers = db.session.query(Answer).filter(Answer.question_id == question.id, Answer.status == 'active').all()
         question.filling_id = filling_id
         question.is_last = filling.is_last
     except:
